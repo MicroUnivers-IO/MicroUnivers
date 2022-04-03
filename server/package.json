@@ -1,0 +1,28 @@
+{
+  "name": "microunivers-server",
+  "version": "1.0.0",
+  "description": "Backend of MicroUnivers.",
+  "main": "server",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc && node dist/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MicroUnivers-IO/MicroUnivers.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MicroUnivers-IO/MicroUnivers/issues"
+  },
+  "homepage": "https://github.com/MicroUnivers-IO/MicroUnivers#readme",
+  "dependencies": {
+    "uWebSockets.js": "uNetworking/uWebSockets.js#v20.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.23",
+    "eslint": "^8.12.0",
+    "typescript": "^4.6.3"
+  }
+}
