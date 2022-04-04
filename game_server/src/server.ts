@@ -1,6 +1,7 @@
 "use strict";
 
 import uWS from "uWebSockets.js";
+import { serverLoop } from "./loop";
 
 const port = 7777;
 
@@ -9,6 +10,7 @@ let PLAYERS = [];
 
 const decoder = new TextDecoder('utf-8');
 
+console.time("temps");
 
 let ACTIONS = Object.freeze({
   ACTIONS_MOVE: "MOVE",
@@ -42,6 +44,24 @@ const app = uWS.App()
       console.log(`Failed to listen to port ${port}`);
   });
 
-setInterval(() => {
-  app.publish("updatePlayers", "Message.");
-}, 16);
+  var aVerySlowFunction = function(milliseconds: number) {
+    // waste time
+    var start = Date.now()
+    while (Date.now() < start.valueOf() + milliseconds) { }
+    console.log("fini.")
+  }
+  
+let nbTime = 0;
+function updateGame() {
+  nbTime++;
+  
+  aVerySlowFunction(1);
+  console.log("testing");
+
+  if(nbTime == 200) {
+      console.timeEnd("temps");
+      process.exit(1);
+  }
+}
+
+serverLoop(updateGame);
