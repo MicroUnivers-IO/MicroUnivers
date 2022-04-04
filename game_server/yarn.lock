@@ -144,6 +144,37 @@
   dependencies:
     "esutils" "^2.0.2"
 
+"esbuild-windows-64@0.14.31":
+  "integrity" "sha512-v/2ye5zBqpmCzi3bLCagStbNQlnOsY7WtMrD2Q0xZxeSIXONxji15KYtVee5o7nw4lXWbQSS1BL8G6BBMvtq4A=="
+  "resolved" "https://registry.npmjs.org/esbuild-windows-64/-/esbuild-windows-64-0.14.31.tgz"
+  "version" "0.14.31"
+
+"esbuild@^0.14.31":
+  "integrity" "sha512-QA0fUM13+JZzcvg1bdrhi7wo8Lr5IRHA9ypNn2znqxGqb66dSK6pAh01TjyBOhzZGazPQJZ1K26VrCAQJ715qA=="
+  "resolved" "https://registry.npmjs.org/esbuild/-/esbuild-0.14.31.tgz"
+  "version" "0.14.31"
+  optionalDependencies:
+    "esbuild-android-64" "0.14.31"
+    "esbuild-android-arm64" "0.14.31"
+    "esbuild-darwin-64" "0.14.31"
+    "esbuild-darwin-arm64" "0.14.31"
+    "esbuild-freebsd-64" "0.14.31"
+    "esbuild-freebsd-arm64" "0.14.31"
+    "esbuild-linux-32" "0.14.31"
+    "esbuild-linux-64" "0.14.31"
+    "esbuild-linux-arm" "0.14.31"
+    "esbuild-linux-arm64" "0.14.31"
+    "esbuild-linux-mips64le" "0.14.31"
+    "esbuild-linux-ppc64le" "0.14.31"
+    "esbuild-linux-riscv64" "0.14.31"
+    "esbuild-linux-s390x" "0.14.31"
+    "esbuild-netbsd-64" "0.14.31"
+    "esbuild-openbsd-64" "0.14.31"
+    "esbuild-sunos-64" "0.14.31"
+    "esbuild-windows-32" "0.14.31"
+    "esbuild-windows-64" "0.14.31"
+    "esbuild-windows-arm64" "0.14.31"
+
 "escape-string-regexp@^4.0.0":
   "integrity" "sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA=="
   "resolved" "https://registry.npmjs.org/escape-string-regexp/-/escape-string-regexp-4.0.0.tgz"

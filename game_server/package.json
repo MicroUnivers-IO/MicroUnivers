@@ -5,7 +5,9 @@
   "main": "server",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc && node dist/server.js"
+    "start": "tsc && node dist/server.js",
+    "build": "tsc",
+    "startesbuild": "node build.js && node ./dist/server.js"
   },
   "repository": {
     "type": "git",
@@ -18,6 +20,7 @@
   },
   "homepage": "https://github.com/MicroUnivers-IO/MicroUnivers#readme",
   "dependencies": {
+    "esbuild": "^0.14.31",
     "uWebSockets.js": "uNetworking/uWebSockets.js#v20.6.0"
   },
   "devDependencies": {
