@@ -6,6 +6,8 @@ require("esbuild").buildSync({
     "./src/loop.ts",
     "./src/config.ts",
     "./src/game/Player.ts",
+    "./src/benchmarks.ts",
+    "./src/enums.ts"
   ],
   bundle: true,
   outdir: target,
