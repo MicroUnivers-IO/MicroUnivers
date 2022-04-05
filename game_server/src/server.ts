@@ -26,7 +26,7 @@ const app = uWS.App().ws('/ws', {
     message: (ws, msg, isBinary) => {
         msg = JSON.parse(decoder.decode(msg));
         console.log(msg);
-        ws.subscribe("updatePlayers");
+                
     },
 
     close: (ws, code, message) => {
