@@ -4,10 +4,10 @@ require("esbuild")
     entryPoints: [
       "./src/server.ts",
       "./src/loop.ts",
-      "./src/config.ts",
+      "./src/config/config.ts",
       "./src/game/Player.ts",
-      "./src/benchmarks.ts",
-      "./src/enums.ts",
+      "./src/config/benchmarks.ts",
+      "./src/config/enums.ts"
     ],
     bundle: true,
     outdir: target,
