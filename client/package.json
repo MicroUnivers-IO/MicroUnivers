@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node ./scripts/build.cjs",
-    "serveDev": "esbuild --bundle src/app.ts --outfile=static/bundle-microunivers.js --servedir=static"
+    "serveDev": "esbuild --bundle src/app.ts --outfile=static/bundle-microunivers.js --servedir=static",
+    "watchDev": "esbuild --bundle src/app.ts --outfile=static/bundle-microunivers.js --watch"
   },
   "author": "",
   "license": "ISC",
