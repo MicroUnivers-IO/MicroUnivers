@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node ./scripts/build.js",
+    "buildDev": "start nodemon ./dist/server.js --watch dist && start node ./scripts/buildDev.js",
     "start": "npm run build && node ./dist/server.js",
     "import_uws": "node ./scripts/import_uws.js",
     "benchmark": "npm run build && node ./dist/benchmarks.js"

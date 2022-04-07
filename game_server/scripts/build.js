@@ -11,5 +11,6 @@ require("esbuild").buildSync({
   ],
   bundle: true,
   outdir: target,
+  minify: true
 });
 
