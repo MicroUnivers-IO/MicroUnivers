@@ -1,5 +1,6 @@
 export const EVENTS = Object.freeze({
     CLI_CONNECTED: "CLI_CONNECTED",
     CLI_HANDSHAKE: "CLI_HANDSHAKE",
+    CLI_UPDATE: "CLI_UPDATE",
     UPDATE_GAME: "UPDATE_PLAYERS"
 });
