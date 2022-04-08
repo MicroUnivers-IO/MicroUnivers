@@ -1,0 +1,97 @@
+{"frames": {
+
+"idle_0000.png":
+{
+	"frame": {"x":0,"y":0,"w":20,"h":38},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":20,"h":38},
+	"sourceSize": {"w":20,"h":38},
+	"anchor": {"x":0,"y":0}
+},
+"idle_0001.png":
+{
+	"frame": {"x":20,"y":0,"w":20,"h":38},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":20,"h":38},
+	"sourceSize": {"w":20,"h":38},
+	"anchor": {"x":0,"y":0}
+},
+"idle_0002.png":
+{
+	"frame": {"x":40,"y":0,"w":20,"h":38},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":20,"h":38},
+	"sourceSize": {"w":20,"h":38},
+	"anchor": {"x":0,"y":0}
+},
+"idle_0003.png":
+{
+	"frame": {"x":60,"y":0,"w":20,"h":38},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":20,"h":38},
+	"sourceSize": {"w":20,"h":38},
+	"anchor": {"x":0,"y":0}
+},
+"walk_0000.png":
+{
+	"frame": {"x":80,"y":0,"w":24,"h":38},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":38},
+	"sourceSize": {"w":24,"h":38},
+	"anchor": {"x":0,"y":0}
+},
+"walk_0001.png":
+{
+	"frame": {"x":104,"y":0,"w":24,"h":38},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":38},
+	"sourceSize": {"w":24,"h":38},
+	"anchor": {"x":0,"y":0}
+},
+"walk_0002.png":
+{
+	"frame": {"x":128,"y":0,"w":24,"h":38},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":38},
+	"sourceSize": {"w":24,"h":38},
+	"anchor": {"x":0,"y":0}
+},
+"walk_0003.png":
+{
+	"frame": {"x":152,"y":0,"w":24,"h":38},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":38},
+	"sourceSize": {"w":24,"h":38},
+	"anchor": {"x":0,"y":0}
+},
+"walk_0004.png":
+{
+	"frame": {"x":176,"y":0,"w":24,"h":38},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":38},
+	"sourceSize": {"w":24,"h":38},
+	"anchor": {"x":0,"y":0}
+}},
+"animations": {
+	"idle": ["idle_0000.png","idle_0001.png","idle_0002.png","idle_0003.png"],
+	"walk": ["walk_0000.png","walk_0001.png","walk_0002.png","walk_0003.png","walk_0004.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "player.png",
+	"format": "RGBA8888",
+	"size": {"w":200,"h":38},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:8894e068803cbec9ff6d52b774834386:b4eab945fa8dddef0bcfad4152570dee:86d5339b780aedd87b35e2b7c0a7e11b$"
+}
+}
