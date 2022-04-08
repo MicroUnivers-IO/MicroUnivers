@@ -2,9 +2,9 @@
 
 import uWS from "uWebSockets.js";
 import { serverLoop } from "./loop";
-import messageHandler from "./handlers/messageHandler";
-import connectHandler from "./handlers/connectHandler";
-import closeHandler from "./handlers/closeHandler";
+import messageHandler from "./handlers/messageHandler/messageHandler";
+import connectHandler from "./handlers/connectHandler/connectHandler";
+import closeHandler from "./handlers/closeHandler/closeHandler";
 
 const port = 7777;
 

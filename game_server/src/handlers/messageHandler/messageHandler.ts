@@ -1,5 +1,5 @@
-import { GAME_TEMPLATE } from "../server";
-import { PROTOCOLS } from "../../../lib/enums/protocols";
+import { GAME_TEMPLATE } from "../../server";
+import { PROTOCOLS } from "../../../../lib/enums/protocols";
 import uWS from "uWebSockets.js";
 
 const decoder = new TextDecoder('utf-8');

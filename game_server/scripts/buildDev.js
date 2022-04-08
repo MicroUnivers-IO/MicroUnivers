@@ -1,17 +1,9 @@
 const target = "./dist";
+const entryPoints = require("./entryPoints");
+
 require("esbuild")
   .build({
-    entryPoints: [
-      "./src/server.ts",
-      "./src/loop.ts",
-      "./src/config/config.ts",
-      "./src/game/Player.ts",
-      "./src/config/benchmarks.ts",
-      "../lib/enums/protocols.ts",
-      "./src/handlers/closeHandler.ts",
-      "./src/handlers/connectHandler.ts",
-      "./src/handlers/messageHandler.ts"
-    ],
+    entryPoints,
     bundle: true,
     outdir: target,
     watch: {
