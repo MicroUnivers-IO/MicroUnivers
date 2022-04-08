@@ -2,34 +2,45 @@
 
 import uWS from "uWebSockets.js";
 import { serverLoop } from "./loop";
+import messageHandler from "./handlers/messageHandler/messageHandler";
+import connectHandler from "./handlers/connectHandler/connectHandler";
+import closeHandler from "./handlers/closeHandler/closeHandler";
 
 const port = 7777;
 
-let SOCKETS: uWS.WebSocket[] = [];
-let PLAYERS = [];
-let ENTITIES = [];
-let GAME_EVENTS = [];
+export type GAME_TEMPLATE = {
+    SOCKETS:  uWS.WebSocket | uWS.WebSocket[];
+    UNAUTHENTICATED_SOCKETS:  uWS.WebSocket | uWS.WebSocket[];
+    PLAYERS: [];
+    ENTITIES: [];
+    GAME_EVENTS: [];
+}
 
-const decoder = new TextDecoder('utf-8');
+const GAME: GAME_TEMPLATE = {
+    SOCKETS: [],
+    UNAUTHENTICATED_SOCKETS: [],
+    PLAYERS: [],
+    ENTITIES: [],
+    GAME_EVENTS: []
+};
 
 
-const app = uWS.App().ws('/wss', {
+const app = uWS.App().ws('/ws', {
     // config
     compression: 0,
     maxPayloadLength: 16 * 1024 * 1024,
     idleTimeout: 60,
+
     open: (ws) => {
-        SOCKETS.push(ws);
-        console.log(SOCKETS);
+        connectHandler(GAME, ws);
     },
 
     message: (ws, msg, isBinary) => {
-        msg = JSON.parse(decoder.decode(msg));
-        console.log(msg);               
+      messageHandler(GAME, ws, msg, isBinary);
     },
 
-    close: (ws, code, message) => {
-        // called when a ws connection is closed
+    close: (ws, code, msg) => {
+        closeHandler(GAME, ws, code, msg);
     }
 
 }).listen(port, token => {
@@ -46,5 +57,4 @@ function updateGame() {
 }
 
 serverLoop(updateGame);
-console.log("hELLO STEFAN !")
 

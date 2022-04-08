@@ -23,6 +23,7 @@
   "homepage": "https://github.com/MicroUnivers-IO/MicroUnivers#readme",
   "dependencies": {
     "esbuild": "^0.14.31",
+    "nanoid": "^3.3.2",
     "uWebSockets.js": "uNetworking/uWebSockets.js#v20.6.0"
   },
   "devDependencies": {

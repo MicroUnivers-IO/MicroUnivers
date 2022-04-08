@@ -1,16 +1,11 @@
 const target = "./dist";
+const entryPoints = require("./entryPoints");
 
 require("esbuild").buildSync({
-  entryPoints: [
-    "./src/server.ts",
-    "./src/loop.ts",
-    "./src/config.ts",
-    "./src/game/Player.ts",
-    "./src/benchmarks.ts",
-    "./src/enums.ts"
-  ],
+  entryPoints,
   bundle: true,
   outdir: target,
-  minify: true
+  minify: true,
+  platform: 'node'
 });
 

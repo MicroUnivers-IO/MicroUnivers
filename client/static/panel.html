@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel</title>
+</head>
+
+<style>
+
+</style>
+<body>
+
+    <button onclick="connectToSocket()">(Re)Connexion a la socket</button>
+    <button onclick="sendMsg()">Envoyer Message</button>
+    
+    <textarea id="msg" placeholder="JSONOBJECT"></textarea>
+    <script>
+        let textarea = document.getElementById("msg");
+        let ws;
+        function connectToSocket() {
+            console.log("Procédure de connexion lancée...🤖")
+            if(ws) ws.close();
+            ws = new WebSocket("ws://127.0.0.1:7777/ws");
+        }
+        function sendMsg() {
+            ws.send(textarea.innerText);
+        }
+
+    </script>
+</body>
+
+</html>

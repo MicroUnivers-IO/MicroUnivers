@@ -1,14 +1,9 @@
 const target = "./dist";
+const entryPoints = require("./entryPoints");
+
 require("esbuild")
   .build({
-    entryPoints: [
-      "./src/server.ts",
-      "./src/loop.ts",
-      "./src/config.ts",
-      "./src/game/Player.ts",
-      "./src/benchmarks.ts",
-      "./src/enums.ts",
-    ],
+    entryPoints,
     bundle: true,
     outdir: target,
     watch: {
@@ -17,6 +12,7 @@ require("esbuild")
         else console.log("En attente de modification pour rebuild...");
       },
     },
+    platform: 'node',
   })
   .then((result) => {
     console.log("En attente de modification pour rebuild...");

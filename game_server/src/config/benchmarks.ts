@@ -1,7 +1,33 @@
 "use strict";
 
 import { TICK_SEC } from "./config";
-import { serverLoop, serverLoopBad } from "./loop";
+
+const tickLengthMs = 1000 / TICK_SEC;
+
+let previousTick = Date.now();
+let actualTicks = 0;
+
+let serverLoop  = (update: Function) => {
+  let now = Date.now();
+
+  actualTicks++;
+  if (previousTick + tickLengthMs <= now) {
+    previousTick = now;
+    update();
+    actualTicks = 0;
+  }
+
+  if (Date.now() - previousTick < tickLengthMs - 16) {
+    setTimeout(serverLoop.bind(null, update));
+  } else {
+    setImmediate(serverLoop.bind(null, update));
+  }
+}
+
+let serverLoopBad = (update: Function) => {
+  setInterval(() => update(), tickLengthMs);
+}
+
 
 /* -------- Fonction pour benchmark le temps/nb d'exécutions -------- */
 let startTime = performance.now();
@@ -25,12 +51,6 @@ function updateGameBenchMark() {
 
 }
 /* ----------------------------------------------------------------- */
-
-function updateGame() {
-    //updatePlayers();
-    //updateGameEvents();
-    //updateEntities();
-}
 
 
 //serverLoopBad(updateGameBenchMark)

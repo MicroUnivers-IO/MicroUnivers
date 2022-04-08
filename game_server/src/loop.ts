@@ -1,4 +1,4 @@
-import { TICK_SEC } from "./config";
+import { TICK_SEC } from "./config/config";
 
 const tickLengthMs = 1000 / TICK_SEC;
 
@@ -20,8 +20,4 @@ export let serverLoop  = (update: Function) => {
   } else {
     setImmediate(serverLoop.bind(null, update));
   }
-}
-
-export let serverLoopBad = (update: Function) => {
-  setInterval(() => update(), tickLengthMs);
 }
