@@ -1,11 +1,42 @@
-import { Container, Sprite, Text } from 'pixi.js';
+import { Container, AnimatedSprite, Text, Texture, Resource, Spritesheet } from 'pixi.js';
 
 export class Player {
 
-    pview: Container
-    name: string;
-    playerSprite: Sprite
-    nameSprite: Text
+    private pview: Container
+    private name: string;
+    private nameSprite: Text;
+    private currentSprite: AnimatedSprite;
 
-    constructor() {}
+    constructor(playerName:string, animation:AnimatedSprite) {
+        this.name = playerName;
+        this.currentSprite = animation;
+        this.currentSprite.play();
+
+        this.nameSprite = new Text(this.name, {fontFamily: 'Arial', fontSize: 12, fill: 0x000000, align: 'center'});
+        this.pview = new Container();
+
+        this.currentSprite.x = 0;
+        this.currentSprite.y = 0;
+        this.nameSprite.x = 0;
+        this.nameSprite.y = -20;
+
+        console.log("construct");
+
+        this.pview.addChild(this.currentSprite);
+        this.pview.addChild(this.nameSprite);
+    }
+
+    changeAnimation(animation: AnimatedSprite) {
+        this.currentSprite = animation;
+    }
+
+    getView() {
+        console.log("getView");
+        console.log(this.pview );
+        return this.pview;
+    }
+
+    getName() {
+        return this.name;
+    }
 }
