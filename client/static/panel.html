@@ -22,6 +22,7 @@
         let ws;
         function connectToSocket() {
             console.log("Procédure de connexion lancée...🤖")
+            if(ws) ws.close();
             ws = new WebSocket("ws://127.0.0.1:7777/ws");
         }
         function sendMsg() {

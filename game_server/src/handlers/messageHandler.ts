@@ -1,5 +1,5 @@
 import { GAME_TEMPLATE } from "../server";
-import { EVENTS } from "../config/enums";
+import { PROTOCOLS } from "../../../lib/enums/protocols";
 import uWS from "uWebSockets.js";
 
 const decoder = new TextDecoder('utf-8');
@@ -11,20 +11,19 @@ export default function (game: GAME_TEMPLATE, ws: uWS.WebSocket, msgBuffer: Arra
     } catch (e) {
         msg = undefined;
     }
+    console.log("SOCKET : ", ws);
     
-    // console.log(`Message reçu de la socket :`, ws, `Msg : ${msg}`);
-
-    // is msg.type = DEPLACEMENT
     if (msg?.type == undefined) return console.log('Message non défini.');
 
     switch (msg?.type) {
-        case EVENTS.CLI_CONNECTED:
+        case PROTOCOLS.CLI_CONNECTED:
             console.log("Client Connected !");
             break;
-        case EVENTS.CLI_HANDSHAKE:
+        case PROTOCOLS.CLI_HANDSHAKE:
+            CLI_HANDSHAKE_handler(game, ws, msg);
             console.log("Client Handshake !");
             break;
-        case EVENTS.CLI_UPDATE:
+        case PROTOCOLS.CLI_UPDATE:
             console.log("Client Update !");
             break;
         default:
@@ -33,5 +32,18 @@ export default function (game: GAME_TEMPLATE, ws: uWS.WebSocket, msgBuffer: Arra
     }
     
 
+
+}
+
+function CLI_HANDSHAKE_handler(game: GAME_TEMPLATE, ws:uWS.WebSocket, msg: string) {
+    // récupération de l'id utilisateur (étape future : JWT avec l'user ID)
+
+    // Va chercher les infos joueurs dans la BDD
+
+    // Met la WS dans GAME.SOCKETS (la vire de GAME.UNAUTHENTICATED_SOCKETS)
+
+    // ws.userId = userId
+
+    // ws.subscribe à tous les topics
 
 }

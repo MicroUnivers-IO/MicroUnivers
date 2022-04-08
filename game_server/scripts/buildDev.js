@@ -7,7 +7,7 @@ require("esbuild")
       "./src/config/config.ts",
       "./src/game/Player.ts",
       "./src/config/benchmarks.ts",
-      "./src/config/enums.ts",
+      "../lib/enums/protocols.ts",
       "./src/handlers/closeHandler.ts",
       "./src/handlers/connectHandler.ts",
       "./src/handlers/messageHandler.ts"

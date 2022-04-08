@@ -10,6 +10,7 @@ const port = 7777;
 
 export type GAME_TEMPLATE = {
     SOCKETS:  uWS.WebSocket | uWS.WebSocket[];
+    UNAUTHENTICATED_SOCKETS:  uWS.WebSocket | uWS.WebSocket[];
     PLAYERS: [];
     ENTITIES: [];
     GAME_EVENTS: [];
@@ -17,6 +18,7 @@ export type GAME_TEMPLATE = {
 
 const GAME: GAME_TEMPLATE = {
     SOCKETS: [],
+    UNAUTHENTICATED_SOCKETS: [],
     PLAYERS: [],
     ENTITIES: [],
     GAME_EVENTS: []
