@@ -18,9 +18,7 @@ export class Player {
         this.currentSprite.x = 0;
         this.currentSprite.y = 0;
         this.nameSprite.x = 0;
-        this.nameSprite.y = -20;
-
-        console.log("construct");
+        this.nameSprite.y = this.currentSprite.height;
 
         this.pview.addChild(this.currentSprite);
         this.pview.addChild(this.nameSprite);
@@ -31,8 +29,6 @@ export class Player {
     }
 
     getView() {
-        console.log("getView");
-        console.log(this.pview );
         return this.pview;
     }
 

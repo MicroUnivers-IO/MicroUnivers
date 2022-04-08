@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@pixi/tilemap": "^3.2.2",
     "esbuild": "^0.14.30",
     "pixi.js": "^6.3.0"
   }
