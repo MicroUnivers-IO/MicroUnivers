@@ -1,10 +1,10 @@
-import { GAME_TEMPLATE } from "../../server";
 import { PROTOCOLS } from "../../../../lib/enums/protocols";
 import uWS from "uWebSockets.js";
+import Lobby from "../../model/lobby";
 
 const decoder = new TextDecoder('utf-8');
 
-export default function (game: GAME_TEMPLATE, ws: uWS.WebSocket, msgBuffer: ArrayBuffer, isBinary: boolean) {
+export default function (lobby: Lobby, ws: uWS.WebSocket, msgBuffer: ArrayBuffer, isBinary: boolean) {
     let msg;
     try {
         msg = JSON.parse(decoder.decode(msgBuffer));
@@ -20,7 +20,7 @@ export default function (game: GAME_TEMPLATE, ws: uWS.WebSocket, msgBuffer: Arra
             console.log("Client Connected !");
             break;
         case PROTOCOLS.CLI_HANDSHAKE:
-            CLI_HANDSHAKE_handler(game, ws, msg);
+            CLI_HANDSHAKE_handler(lobby, ws, msg);
             console.log("Client Handshake !");
             break;
         case PROTOCOLS.CLI_UPDATE:
@@ -28,14 +28,13 @@ export default function (game: GAME_TEMPLATE, ws: uWS.WebSocket, msgBuffer: Arra
             break;
         default:
             return console.log('Type de message inconnu.');
-            break;
     }
     
 
 
 }
 
-function CLI_HANDSHAKE_handler(game: GAME_TEMPLATE, ws:uWS.WebSocket, msg: string) {
+function CLI_HANDSHAKE_handler(lobby: Lobby, ws:uWS.WebSocket, msg: string) {
     // récupération de l'id utilisateur (étape future : JWT avec l'user ID)
 
     // Va chercher les infos joueurs dans la BDD

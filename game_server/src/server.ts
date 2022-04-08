@@ -5,25 +5,11 @@ import { serverLoop } from "./loop";
 import messageHandler from "./handlers/messageHandler/messageHandler";
 import connectHandler from "./handlers/connectHandler/connectHandler";
 import closeHandler from "./handlers/closeHandler/closeHandler";
+import Lobby from "./model/lobby";
 
 const port = 7777;
 
-export type GAME_TEMPLATE = {
-    SOCKETS:  uWS.WebSocket | uWS.WebSocket[];
-    UNAUTHENTICATED_SOCKETS:  uWS.WebSocket | uWS.WebSocket[];
-    PLAYERS: [];
-    ENTITIES: [];
-    GAME_EVENTS: [];
-}
-
-const GAME: GAME_TEMPLATE = {
-    SOCKETS: [],
-    UNAUTHENTICATED_SOCKETS: [],
-    PLAYERS: [],
-    ENTITIES: [],
-    GAME_EVENTS: []
-};
-
+const lobby = new Lobby();
 
 const app = uWS.App().ws('/ws', {
     // config
@@ -32,19 +18,19 @@ const app = uWS.App().ws('/ws', {
     idleTimeout: 60,
 
     open: (ws) => {
-        connectHandler(GAME, ws);
+        connectHandler(lobby, ws);
     },
 
     message: (ws, msg, isBinary) => {
-      messageHandler(GAME, ws, msg, isBinary);
+      messageHandler(lobby, ws, msg, isBinary);
     },
 
     close: (ws, code, msg) => {
-        closeHandler(GAME, ws, code, msg);
+        closeHandler(lobby, ws, code, msg);
     }
 
-}).listen(port, token => {
-    token ?
+}).listen(port, success => {
+    success ?
         console.log(`Le serveur de socket écoute sur le port : ${port}`) :
         console.log(`Erreur dans le lancement dans la socket sur le port : ${port}`);
 });
