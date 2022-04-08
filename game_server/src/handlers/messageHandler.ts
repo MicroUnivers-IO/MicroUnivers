@@ -5,11 +5,17 @@ import uWS from "uWebSockets.js";
 const decoder = new TextDecoder('utf-8');
 
 export default function (game: GAME_TEMPLATE, ws: uWS.WebSocket, msgBuffer: ArrayBuffer, isBinary: boolean) {
-    let msg = JSON.parse(decoder.decode(msgBuffer));
+    let msg;
+    try {
+        msg = JSON.parse(decoder.decode(msgBuffer));
+    } catch (e) {
+        msg = undefined;
+    }
+    
     // console.log(`Message reçu de la socket :`, ws, `Msg : ${msg}`);
 
     // is msg.type = DEPLACEMENT
-    if (msg.type == undefined) return console.log('Type de message inconnu.');
+    if (msg?.type == undefined) return console.log('Message non défini.');
 
     switch (msg?.type) {
         case EVENTS.CLI_CONNECTED:
