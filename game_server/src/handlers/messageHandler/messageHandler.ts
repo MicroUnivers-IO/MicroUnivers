@@ -1,6 +1,7 @@
 import { PROTOCOLS } from "../../../../lib/enums/protocols";
 import uWS from "uWebSockets.js";
 import Lobby from "../../model/lobby";
+import Player from "../../model/player";
 
 const decoder = new TextDecoder('utf-8');
 
@@ -30,17 +31,16 @@ export default function (lobby: Lobby, ws: uWS.WebSocket, msgBuffer: ArrayBuffer
             return console.log('Type de message inconnu.');
     }
     
-
-
 }
 
 function CLI_HANDSHAKE_handler(lobby: Lobby, ws:uWS.WebSocket, msg: string) {
+    ws.timeout = null; // On annule la suppression de la socket
     // récupération de l'id utilisateur (étape future : JWT avec l'user ID)
 
     // Va chercher les infos joueurs dans la BDD
 
     // Met la WS dans GAME.SOCKETS (la vire de GAME.UNAUTHENTICATED_SOCKETS)
-
+    
     // ws.userId = userId
 
     // ws.subscribe à tous les topics

@@ -7,5 +7,7 @@ module.exports = [
     "../lib/enums/protocols.ts",
     "./src/handlers/closeHandler/closeHandler.ts",
     "./src/handlers/connectHandler/connectHandler.ts",
-    "./src/handlers/messageHandler/messageHandler.ts"
+    "./src/handlers/messageHandler/messageHandler.ts",
+    "./src/model/lobby.ts",
+    "./src/model/player.ts",
 ]
