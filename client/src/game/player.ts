@@ -8,6 +8,7 @@ export class Player {
     private currentSprite: AnimatedSprite;
     private walking: boolean;
     private playerScale: number;
+    private playerSpeed: number = 1;
 
     constructor(playerName:string, animation:AnimatedSprite, scale:number = 1.5) {
         this.name = playerName;
@@ -21,6 +22,8 @@ export class Player {
 
         this.nameSprite = new Text(this.name, {fontFamily: 'Arial', fontSize: 12, fill: 0x000000, align: 'center'});
         this.pview = new Container();
+        this.pview.width = this.currentSprite.width;
+        this.pview.height = this.currentSprite.height;
 
         this.currentSprite.x = 0;
         this.currentSprite.y = 0;
@@ -60,5 +63,9 @@ export class Player {
 
     getWalking() {
         return this.walking;
+    }
+
+    getSpeed() {
+        return this.playerSpeed;
     }
 }

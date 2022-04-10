@@ -33,7 +33,7 @@ export function resizeHandler() {
 	app.stage.removeChildren();
 
     app.renderer.resize(window.innerWidth - 20, window.innerHeight - 20);
-	map.generateView(playerView.x, playerView.y, app.screen.width, app.screen.height);
+	map.generateView(app.screen.width, app.screen.height);
 	app.stage.addChild(map.getView());
 
 	playerView.x = app.screen.width / 2;
@@ -42,18 +42,17 @@ export function resizeHandler() {
 }
 
 function move() {
-	console.log("move");
 	if(zPressed) {
-		mapContainer.y += 1;
+		mapContainer.y += player.getSpeed();
 	}
 	if(sPressed) {
-		mapContainer.y -= 1;
+		mapContainer.y -= player.getSpeed();
 	}
 	if(qPressed) {
-		mapContainer.x += 1;
+		mapContainer.x += player.getSpeed();
 	}
 	if(dPressed) {
-		mapContainer.x -= 1;
+		mapContainer.x -= player.getSpeed();
 	}
 }
 
@@ -177,7 +176,5 @@ window.addEventListener("keyup", handleKeyup);
 
 app.loader.onComplete.add(initApp);
 app.loader.add("playerSpritesheet", "assets/player/player.json");
-console.log(app.loader.resources["playerSpritesheet"]);
 
 loadResources();
-
