@@ -8,8 +8,8 @@ const app = new Application({
 	resolution: window.devicePixelRatio || 1,
 	autoDensity: true,
 	backgroundColor: 0x6495ed,
-	width: window.innerWidth - 20,
-	height: window.innerHeight - 20,
+	width: window.innerWidth,
+	height: window.innerHeight,
 });
 
 // Player related data
@@ -17,6 +17,8 @@ let player: Player;
 let playerSpriteSheet:Spritesheet
 let playerAnimation:AnimatedSprite
 let playerView: Container;
+let playerXpos: number;
+let playerYpos: number;
 
 // Movement related data
 let zPressed: boolean;
@@ -39,10 +41,12 @@ let mapY: number;
  */
 export function resizeHandler() {
 	app.stage.removeChildren();
-	app.renderer.resize(window.innerWidth - 20, window.innerHeight - 20);
+	app.renderer.resize(window.innerWidth, window.innerHeight);
     initApp();
 }
 
+//TODO: Needs to be fixed : The player's speed changes from a computer to another.
+//TODO: Needs to be fixed : The player's speed changes after resize (related to above?).
 /**
  * Moves the player according to the key pressed.
  * 
@@ -52,21 +56,24 @@ export function resizeHandler() {
 function move() {
 	if(zPressed) {
 		mapContainer.y += player.getSpeed();
+		playerYpos += player.getSpeed();
 	}
 	if(sPressed) {
 		mapContainer.y -= player.getSpeed();
+		playerYpos -= player.getSpeed();
 	}
 	if(qPressed) {
 		mapContainer.x += player.getSpeed();
+		playerXpos += player.getSpeed();
 	}
 	if(dPressed) {
 		mapContainer.x -= player.getSpeed();
+		playerXpos -= player.getSpeed();
 	}
 	mapX = mapContainer.x;
 	mapY = mapContainer.y;
 }
 
-//TODO: Needs to be fixed : The animation sometimes cancels itself.
 //TODO: Needs to be fixed : The reverse effect moves the player (probably because the container has wrong dimensions).
 /**
  * Manages the player's walking animation.
@@ -143,28 +150,28 @@ function handleKeyup(event: KeyboardEvent) {
 	switch(event.key) {
 		case "z":
 		case "Z":
-			if(player.getWalking()) {
+			if(!sPressed && !qPressed && !dPressed) {
 				manageWalk(false);
 			}
 			zPressed = false;
 			break;
 		case "s":
 		case "S":
-			if(player.getWalking()) {
+			if(!zPressed && !qPressed && !dPressed) {
 				manageWalk(false);
 			}
 			sPressed = false;
 			break;
 		case "q":
 		case "Q":
-			if(player.getWalking()) {
+			if(!zPressed && !sPressed && !dPressed) {
 				manageWalk(false);
 			}
 			qPressed = false;
 			break;
 		case "d":
 		case "D":
-			if(player.getWalking()) {
+			if(!zPressed && !sPressed && !qPressed) {
 				manageWalk(false);
 			}
 			dPressed = false;
@@ -221,10 +228,10 @@ function initApp() {
 	mapContainer = map.getView();
 
 	// Placing player and map
+	playerView.x = window.innerWidth / 2;
+	playerView.y = window.innerHeight / 2;
 	mapContainer.x = mapX;
 	mapContainer.y = mapY;
-	playerView.x = app.screen.width / 2;
-	playerView.y = app.screen.height / 2;
 
 	// Adding the player and map to the app
 	app.stage.addChild(mapContainer);
@@ -234,10 +241,12 @@ function initApp() {
 	app.ticker.add(move, 150);
 }
 
-// Setting the position relatively to the map
+// Sets the position of the player and places the map accordingly
 // TODO: Getting the coords to place at from the server
-mapX = 0;
-mapY = 0;
+playerXpos = 500;
+playerYpos = 500;
+mapX = playerXpos - window.innerWidth / 2;
+mapY = playerYpos - window.innerHeight / 2;
 
 // Adding Event Listeners
 window.addEventListener("resize", resizeHandler);

@@ -15,11 +15,12 @@ export class Player {
     private currentSprite: AnimatedSprite;
     private walking: boolean;
     private playerScale: number;
-    private playerSpeed: number = 1;
+    private playerSpeed: number;
 
-    constructor(playerName:string, animation:AnimatedSprite, scale:number = 1.5) {
+    constructor(playerName:string, animation:AnimatedSprite, scale:number = 1.5, speed:number = 1) {
         this.name = playerName;
         this.playerScale = scale;
+        this.playerSpeed = speed;
 
         this.currentSprite = animation;
         this.currentSprite.scale.x = this.playerScale;
@@ -49,9 +50,10 @@ export class Player {
      * Changes the player's animation.
      * 
      * Deletes the AnimatedSprite that was previously set and replaces it with the new one.
+     * The player's view needs to be re-added to the app after.
      * 
-     * @param animation AnimatedSprite to change to.
-     * @param reverse Whether the player should be facing left or right.
+     * @param animation AnimatedSprite to change to
+     * @param reverse Whether the player should be facing left or right
      */
     changeAnimation(animation: AnimatedSprite, reverse: boolean = false) {
         this.pview.removeChild(this.currentSprite);
@@ -81,6 +83,7 @@ export class Player {
     }
 
     getSpeed() {
+        console.log(this.playerSpeed)
         return this.playerSpeed;
     }
 }

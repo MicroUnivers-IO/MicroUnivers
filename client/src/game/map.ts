@@ -52,10 +52,6 @@ export class GameMap {
                 mapY = i;
                 screenX =  mapX * this.tileSize;
                 screenY =  mapY * this.tileSize;
-                console.log(mapX, mapY, screenX, screenY);
-
-                if(mapX < 0 || mapY < 0 || mapX >= 100 || mapY >= 100)
-                    continue;
 
                 tileAtPos = this.data[mapX][mapY];
                 tileTexture = 'assets/tileset/field_' + tileAtPos.toString().padStart(2, '0') + '.png';
