@@ -54,24 +54,32 @@ export function resizeHandler() {
  * The player stays centered on screen.
  */
 function move() {
+	if(!zPressed && !sPressed && !qPressed && !dPressed)
+		return;
+	let movementVector: number[] = [0, 0];
 	if(zPressed) {
-		mapContainer.y += player.getSpeed();
-		playerYpos += player.getSpeed();
+		movementVector[1] += player.getSpeed();
 	}
 	if(sPressed) {
-		mapContainer.y -= player.getSpeed();
-		playerYpos -= player.getSpeed();
+		movementVector[1] -= player.getSpeed();
 	}
 	if(qPressed) {
-		mapContainer.x += player.getSpeed();
-		playerXpos += player.getSpeed();
+		movementVector[0] += player.getSpeed();
 	}
 	if(dPressed) {
-		mapContainer.x -= player.getSpeed();
-		playerXpos -= player.getSpeed();
+		movementVector[0] -= player.getSpeed();
 	}
+
+	let movementMagnitude:number = Math.sqrt(movementVector[0] * movementVector[0] + movementVector[1] * movementVector[1]);
+	movementVector = [movementVector[0] / movementMagnitude, movementVector[1] / movementMagnitude];
+
+	mapContainer.position.x += movementVector[0];
+	mapContainer.position.y += movementVector[1];
+	playerXpos += movementVector[0];
+	playerYpos += movementVector[1];
 	mapX = mapContainer.x;
 	mapY = mapContainer.y;
+	console.log(movementVector);
 }
 
 //TODO: Needs to be fixed : The reverse effect moves the player (probably because the container has wrong dimensions).
@@ -187,7 +195,7 @@ function handleKeyup(event: KeyboardEvent) {
 function loadResources() {
 	app.loader.add("playerSpritesheet", "assets/player/player.json");
 
-	fetch("assets/tileset/field.json")
+	fetch("./assets/tileset/field.json")
 	.then(response => {
 		return response.json();
 	})

@@ -29,8 +29,8 @@ export class GameMap {
      * Creates a CompositeRectileLayer as a tilemap and adds its tiles refering to the map's data.
      * Then, it adds the tilemap to the map container.
      * 
-     * @param screenWidth Current screen width.
-     * @param screenHeight Current screen height.
+     * @param screenWidth Current screen width
+     * @param screenHeight Current screen height
      */
     generateView(screenWidth: number, screenHeight: number) {
         let tileAtPos:number;

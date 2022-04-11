@@ -83,7 +83,6 @@ export class Player {
     }
 
     getSpeed() {
-        console.log(this.playerSpeed)
         return this.playerSpeed;
     }
 }
