@@ -1,6 +1,13 @@
-import { BaseTexture, Container, Texture } from "pixi.js";
+import { Container } from "pixi.js";
 import { CompositeRectTileLayer } from "@pixi/tilemap";
 
+/**
+ * Class representing the game map.
+ * It contains a container of the map's layers and data related to its characteristics.
+ * 
+ * To use, create an instance of the object, generate the game view with the {@link generateView} method,
+ * and use the {@link getView} method to get the game view.
+ */
 export class GameMap {
     private mapContainer: Container;
     private ground: CompositeRectTileLayer;
@@ -16,6 +23,15 @@ export class GameMap {
         this.height = h;
     }
 
+    /**
+     * Generates the view of the map.
+     * 
+     * Creates a CompositeRectileLayer as a tilemap and adds its tiles refering to the map's data.
+     * Then, it adds the tilemap to the map container.
+     * 
+     * @param screenWidth Current screen width.
+     * @param screenHeight Current screen height.
+     */
     generateView(screenWidth: number, screenHeight: number) {
         let tileAtPos:number;
         let tileTexture:string;
@@ -27,6 +43,9 @@ export class GameMap {
         this.mapContainer = new Container();
         this.ground = new CompositeRectTileLayer();        
 
+        // Adding the map's tiles. Goes through all the data matrix to add the tiles.
+        // The tile's x and y position are calculated by multiplying the i and j indexes by the size of a tile.
+        // 1 tile = 32px, so (i,j) = (x,y) = (i*32, j*32)
         for (let i = 0; i < this.height; i++) {
             for (let j = 0; j < this.width; j++) {
                 mapX = j;

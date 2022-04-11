@@ -1,5 +1,12 @@
-import { Container, AnimatedSprite, Text, Texture, Resource, Spritesheet } from 'pixi.js';
+import { Container, AnimatedSprite, Text } from 'pixi.js';
 
+/**
+ * Class representing a player.
+ * It contains a container that has the player sprite and his name.
+ * Also has data related to its characteristics.
+ * 
+ * To use, create an instance of the object and use the {@link getView} method to get the player's view.
+ */
 export class Player {
 
     private pview: Container
@@ -38,6 +45,14 @@ export class Player {
         this.walking = !this.walking;
     }
 
+    /**
+     * Changes the player's animation.
+     * 
+     * Deletes the AnimatedSprite that was previously set and replaces it with the new one.
+     * 
+     * @param animation AnimatedSprite to change to.
+     * @param reverse Whether the player should be facing left or right.
+     */
     changeAnimation(animation: AnimatedSprite, reverse: boolean = false) {
         this.pview.removeChild(this.currentSprite);
         this.currentSprite = animation;
