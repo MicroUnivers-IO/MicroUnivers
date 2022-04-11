@@ -32,7 +32,7 @@ export class GameMap {
      * @param screenWidth Current screen width
      * @param screenHeight Current screen height
      */
-    generateView(screenWidth: number, screenHeight: number) {
+    generateView(screenWidth: number, screenHeight: number):void {
         let tileAtPos:number;
         let tileTexture:string;
         let mapX:number;
@@ -61,15 +61,15 @@ export class GameMap {
         this.mapContainer.addChild(this.ground);
     }
 
-    getView() {
+    getView():Container {
         return this.mapContainer;
     }
 
-    getWidth() {
+    getWidth():number {
         return this.width;
     }
 
-    getHeight() {
+    getHeight():number {
         return this.height;
     }
 }

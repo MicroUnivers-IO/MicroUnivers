@@ -42,7 +42,7 @@ export class Player {
         this.pview.addChild(this.nameSprite);
     }
 
-    toggleWalk(){
+    toggleWalk(): void {
         this.walking = !this.walking;
     }
 
@@ -55,7 +55,7 @@ export class Player {
      * @param animation AnimatedSprite to change to
      * @param reverse Whether the player should be facing left or right
      */
-    changeAnimation(animation: AnimatedSprite, reverse: boolean = false) {
+    changeAnimation(animation: AnimatedSprite, reverse: boolean = false): void {
         this.pview.removeChild(this.currentSprite);
         this.currentSprite = animation;
         this.currentSprite.x = 0;
@@ -70,19 +70,19 @@ export class Player {
         this.pview.addChild(this.currentSprite);
     }
 
-    getView() {
+    getView(): Container {
         return this.pview;
     }
 
-    getName() {
+    getName(): string {
         return this.name;
     }
 
-    getWalking() {
+    getWalking(): boolean {
         return this.walking;
     }
 
-    getSpeed() {
+    getSpeed(): number {
         return this.playerSpeed;
     }
 }

@@ -39,7 +39,7 @@ let mapY: number;
  * 
  * Reloads the game's resources according to the new dimensions.
  */
-export function resizeHandler() {
+function resizeHandler(): void {
 	app.stage.removeChildren();
 	app.renderer.resize(window.innerWidth, window.innerHeight);
     initApp();
@@ -53,7 +53,7 @@ export function resizeHandler() {
  * The player isn't directly moving. Its view is changing by moving the map's position.
  * The player stays centered on screen.
  */
-function move() {
+function move(): void {
 	if(!zPressed && !sPressed && !qPressed && !dPressed)
 		return;
 
@@ -94,7 +94,7 @@ function move() {
  * @param activateWalk Whether to start or stop walking
  * @param reverse Whether to reverse the direction of the animation
  */
-function manageWalk(activateWalk: boolean, reverse: boolean = false) {
+function manageWalk(activateWalk: boolean, reverse: boolean = false): void {
 	player.toggleWalk();
 	if(activateWalk) {
 		player.changeAnimation(new AnimatedSprite(playerSpriteSheet.animations["walk"]), reverse);
@@ -115,8 +115,7 @@ function manageWalk(activateWalk: boolean, reverse: boolean = false) {
  * 
  * @param event The event that triggered the function call
  */
-function handleKeydown(event: KeyboardEvent) {
-	console.log(event);
+function handleKeydown(event: KeyboardEvent): void {
 	switch(event.key) {
 		case "z":
 		case "Z":
@@ -156,7 +155,7 @@ function handleKeydown(event: KeyboardEvent) {
  * 
  * @param event The event that triggered the function call
  */
-function handleKeyup(event: KeyboardEvent) {
+function handleKeyup(event: KeyboardEvent): void {
 	switch(event.key) {
 		case "z":
 		case "Z":
@@ -194,7 +193,7 @@ function handleKeyup(event: KeyboardEvent) {
  * Adds the player spritesheet to the app's loader.
  * Fetches the map's json to add its tiles to the app's loader.
  */
-function loadResources() {
+function loadResources(): void {
 	app.loader.add("playerSpritesheet", "assets/player/player.json");
 
 	fetch("./assets/tileset/field.json")
@@ -213,7 +212,7 @@ function loadResources() {
  * 
  * @param data The map's data
  */
-function loadMap(data) {
+function loadMap(data):void {
 	mapData = data;
 	map = new GameMap(mapData.layers[0].data, mapData.tilewidth, mapData.width, mapData.height);
 	for (let i = 1; i < mapData.tilesets[0].tilecount; i++) 
@@ -226,7 +225,7 @@ function loadMap(data) {
  * Creates the player and map objects, places them and adds them to the app.
  * Also adds the game's ticker for movements.
  */
-function initApp() {
+function initApp():void {
 	// Creating the player
 	playerSpriteSheet = app.loader.resources["playerSpritesheet"].spritesheet;
 	playerAnimation = new AnimatedSprite(playerSpriteSheet.animations["idle"]);
