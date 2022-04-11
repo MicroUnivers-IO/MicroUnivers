@@ -56,22 +56,25 @@ export function resizeHandler() {
 function move() {
 	if(!zPressed && !sPressed && !qPressed && !dPressed)
 		return;
+
 	let movementVector: number[] = [0, 0];
+	
 	if(zPressed) {
-		movementVector[1] += player.getSpeed();
+		movementVector[1] += 1;
 	}
 	if(sPressed) {
-		movementVector[1] -= player.getSpeed();
+		movementVector[1] -= 1;
 	}
 	if(qPressed) {
-		movementVector[0] += player.getSpeed();
+		movementVector[0] += 1;
 	}
 	if(dPressed) {
-		movementVector[0] -= player.getSpeed();
+		movementVector[0] -= 1;
 	}
 
 	let movementMagnitude:number = Math.sqrt(movementVector[0] * movementVector[0] + movementVector[1] * movementVector[1]);
-	movementVector = [movementVector[0] / movementMagnitude, movementVector[1] / movementMagnitude];
+	movementVector = [(movementVector[0] / movementMagnitude) * player.getSpeed(),
+					 (movementVector[1] / movementMagnitude) * player.getSpeed()];
 
 	mapContainer.position.x += movementVector[0];
 	mapContainer.position.y += movementVector[1];
@@ -79,7 +82,6 @@ function move() {
 	playerYpos += movementVector[1];
 	mapX = mapContainer.x;
 	mapY = mapContainer.y;
-	console.log(movementVector);
 }
 
 //TODO: Needs to be fixed : The reverse effect moves the player (probably because the container has wrong dimensions).

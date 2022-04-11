@@ -17,7 +17,7 @@ export class Player {
     private playerScale: number;
     private playerSpeed: number;
 
-    constructor(playerName:string, animation:AnimatedSprite, scale:number = 1.5, speed:number = 1) {
+    constructor(playerName:string, animation:AnimatedSprite, scale:number = 1.5, speed:number = 3) {
         this.name = playerName;
         this.playerScale = scale;
         this.playerSpeed = speed;
