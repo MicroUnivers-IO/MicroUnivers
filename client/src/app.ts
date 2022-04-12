@@ -197,8 +197,17 @@ function handleKeyup(event: KeyboardEvent): void {
 function loadResources(): void {
 	app.loader.add("playerSpritesheet", "assets/player/player.json");
 
-	for (let i = 1; i < 65; i++) 
+	for (let i = 1; i <= 32; i++) 
 		app.loader.add('assets/tileset/field_' + i.toString().padStart(2, '0') + '.png');
+
+	for (let i = 1; i <= 6; i++) 
+		app.loader.add('assets/tileset/bush_' + i.toString().padStart(2, '0') + '.png');
+
+	for (let i = 1; i <= 16; i++) 
+		app.loader.add('assets/tileset/grass_' + i.toString().padStart(2, '0') + '.png');
+
+	for (let i = 1; i <= 3; i++) 
+		app.loader.add('assets/tileset/trees_' + i.toString().padStart(2, '0') + '.png');
 
 	app.loader.load();
 }

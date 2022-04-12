@@ -15,14 +15,11 @@ export class GameMap {
     private tileSize: number;
     private width: number;
     private height: number;
-    private data: number[][];
 
     constructor(w:number = 100, h:number = 100, ts:number = 32) {
         this.tileSize = ts;
         this.width = w;
         this.height = h;
-
-        this.data = this.perlinGeneration();
     }
 
     /**
@@ -35,65 +32,65 @@ export class GameMap {
      * @param screenHeight Current screen height
      */
     generateView(screenWidth: number, screenHeight: number):void {
-        let tileAtPos:number;
-        let tileTexture:string;
-        let mapX:number;
-        let mapY:number;
-        let screenX:number;
-        let screenY:number;
-
         this.mapContainer = new Container();
-        let ground = new CompositeRectTileLayer(); 
-        let rockTiles = new CompositeRectTileLayer();
-        let rockLayer = makeRectangle(this.width, this.height, this.noiseToTile, {frequency: 0.05, octaves: 8});;
+        let ground = new CompositeRectTileLayer();
+        let grass = new CompositeRectTileLayer();
+        let bushes = new CompositeRectTileLayer();
+        let trees = new CompositeRectTileLayer();
+
+        let mapData = this.perlinGeneration(256, 0.9, 8);
         
-        // Adding the map's tiles. Goes through all the data matrix to add the tiles.
         // The tile's x and y position are calculated by multiplying the i and j indexes by the size of a tile.
         // 1 tile = 32px, so (i,j) = (x,y) = (i*32, j*32)
         for (let i = 0; i < this.height; i++) {
             for (let j = 0; j < this.width; j++) {
-                mapX = j;
-                mapY = i;
-                screenX =  mapX * this.tileSize;
-                screenY =  mapY * this.tileSize;
+                let mapX:number = j;
+                let mapY:number = i;
+                let screenX:number =  mapX * this.tileSize;
+                let screenY:number =  mapY * this.tileSize;
 
-                tileAtPos = this.data[mapX][mapY];
-                if(rockLayer[i][j] >= 20){
-                    tileTexture = 'assets/tileset/field_' + (tileAtPos*2).toString().padStart(2, '0') + '.png';
-                    rockTiles.addFrame(tileTexture, screenX, screenY);
-                }
-                tileTexture = 'assets/tileset/field_' + tileAtPos.toString().padStart(2, '0') + '.png';
+                let groundTile:number = Math.abs(Math.floor(mapData[mapX][mapY]/256)*32)+1;
+                let grassTile:number = Math.abs(Math.floor(mapData[mapX][mapY]/this.width)*16)+1;
+                let bushesTile:number = Math.abs(Math.floor(mapData[mapX][mapY]/this.width)*6)+1;
+                let treesTile:number = Math.abs(Math.floor(mapData[mapX][mapY]/this.width)*3)+1;
+
+                let tileNb:string = groundTile.toString().padStart(2, '0');
+                let tileTexture:string = 'assets/tileset/field_' + tileNb + '.png';
                 ground.addFrame(tileTexture, screenX, screenY);
+
+                tileNb = grassTile.toString().padStart(2, '0');
+                tileTexture = 'assets/tileset/grass_' + tileNb + '.png';
+                grass.addFrame(tileTexture, screenX, screenY);
+
+                tileNb = bushesTile.toString().padStart(2, '0');
+                tileTexture = 'assets/tileset/bush_' + tileNb + '.png';
+                bushes.addFrame(tileTexture, screenX, screenY);
+
+                tileNb = treesTile.toString().padStart(2, '0');
+                tileTexture = 'assets/tileset/trees_' + tileNb + '.png';
+                trees.addFrame(tileTexture, screenX, screenY);
             }
         }
+
         this.mapContainer.addChild(ground);
-        this.mapContainer.addChild(rockTiles);
+        this.mapContainer.addChild(grass);
+        this.mapContainer.addChild(bushes);
+        this.mapContainer.addChild(trees);
     }
 
-    /**
-     * Fills the data array with tile number generated with the Simplex algorithm.
-     * 
-     * Uses the fast-simplex-noise module with the Math.random method.
-     * Result is multiplied by the number of tiles.
-     * 
-     * @returns A two dimensional array containing the map's data.
-     */
-    perlinGeneration(): number[][] {
+    perlinGeneration(size:number, freq:number, oct:number): number[][] {
         let res = new Array(this.width);
-        res = makeRectangle(this.width, this.height, this.noiseToTile);
-        return res;
-    }
 
-    /**
-     * Creates a function that calculates the tile number based on a noise value.
-     *  
-     * @param x The x coordinate of the tile
-     * @param y The y coordinate of the tile
-     * @returns An integer representing the tile number
-     */
-    noiseToTile(x:number, y:number):number {
-        let noise:Noise2Fn = makeNoise2D();
-        return Math.abs(Math.floor(noise(x,y) * 31))+1;
+        res = makeRectangle(this.width, this.height, 
+            function(x:number, y:number): number {
+                let noise:Noise2Fn = makeNoise2D();
+                return noise(x,y) * (size-1) + 1;
+            }, {
+                frequency: freq,
+                octaves: oct
+            });
+
+        return res;
     }
 
     getView():Container {
