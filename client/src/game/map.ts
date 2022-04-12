@@ -18,7 +18,7 @@ export class GameMap {
     private height: number;
     private data: number[][];
 
-    constructor(ts:number = 32, w:number = 100, h:number = 100) {
+    constructor(w:number = 100, h:number = 100, ts:number = 32) {
         this.tileSize = ts;
         this.width = w;
         this.height = h;
