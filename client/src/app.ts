@@ -192,32 +192,15 @@ function handleKeyup(event: KeyboardEvent): void {
  * Loads the game's assets and resources.
  * 
  * Adds the player spritesheet to the app's loader.
- * Fetches the map's json to add its tiles to the app's loader.
+ * Also adds all the tiles png to the app's loader.
  */
 function loadResources(): void {
 	app.loader.add("playerSpritesheet", "assets/player/player.json");
 
-	fetch("./assets/tileset/field.json")
-	.then(response => {
-		return response.json();
-	})
-	.then((data) => {loadMap(data);})
-	.then( () => {app.loader.load();});
-}
-
-/**
- * Loads the map from the json data provided.
- * 
- * Creates a GameMap object from the data provided as a json object.
- * Also adds all the tiles png to the app's loader.
- * 
- * @param data The map's data
- */
-function loadMap(data):void {
-	mapData = data;
-	map = new GameMap(mapData.layers[0].data, mapData.tilewidth, mapData.width, mapData.height);
-	for (let i = 1; i < mapData.tilesets[0].tilecount; i++) 
+	for (let i = 1; i < 65; i++) 
 		app.loader.add('assets/tileset/field_' + i.toString().padStart(2, '0') + '.png');
+
+	app.loader.load();
 }
 
 /**
@@ -234,6 +217,7 @@ function initApp():void {
 	playerView = player.getView();
 
 	// Creating the map
+	map = new GameMap();
 	map.generateView(app.screen.width, app.screen.height);
 	mapContainer = map.getView();
 

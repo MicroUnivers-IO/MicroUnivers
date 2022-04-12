@@ -1,5 +1,6 @@
 import { Container } from "pixi.js";
 import { CompositeRectTileLayer } from "@pixi/tilemap";
+import { makeNoise2D } from "fast-simplex-noise";
 
 /**
  * Class representing the game map.
@@ -9,18 +10,22 @@ import { CompositeRectTileLayer } from "@pixi/tilemap";
  * and use the {@link getView} method to get the game view.
  */
 export class GameMap {
+    private mapNoise: Function;
     private mapContainer: Container;
     private ground: CompositeRectTileLayer;
     private tileSize: number;
     private width: number;
     private height: number;
-    private data:number[][];
+    private data: number[][];
 
-    constructor(data:number[][], ts:number = 32, w:number = 100, h:number = 100) {
-        this.data = data;
+    constructor(ts:number = 32, w:number = 100, h:number = 100) {
         this.tileSize = ts;
         this.width = w;
         this.height = h;
+
+        this.data = [];
+        this.mapNoise = makeNoise2D();
+        this.data = this.perlinGeneration();
     }
 
     /**
@@ -59,6 +64,25 @@ export class GameMap {
             }
         }
         this.mapContainer.addChild(this.ground);
+    }
+
+    /**
+     * Fills the data array with tile number generated with the Simplex algorithm.
+     * 
+     * Uses the fast-simplex-noise module with the Math.random method.
+     * Result is multiplied by the number of tiles.
+     * 
+     * @returns A two dimensional array containing the map's data.
+     */
+    perlinGeneration(): number[][] {
+        let res: number[][] = [];
+        for(let i = 0; i < this.height; i++){
+            res[i] = [];
+            for(let j = 0; j < this.width; j++)
+                res[i][j] = Math.abs(Math.floor(this.mapNoise(i,j)*31))+1;
+        }
+
+        return res;
     }
 
     getView():Container {

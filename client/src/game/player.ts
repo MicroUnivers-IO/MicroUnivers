@@ -31,12 +31,12 @@ export class Player {
         this.nameSprite = new Text(this.name, {fontFamily: 'Arial', fontSize: 12, fill: 0x000000, align: 'center'});
         this.pview = new Container();
         this.pview.width = this.currentSprite.width;
-        this.pview.height = this.currentSprite.height;
+        this.pview.height = this.currentSprite.height + this.nameSprite.height;
 
         this.currentSprite.x = 0;
-        this.currentSprite.y = 0;
+        this.currentSprite.y = this.nameSprite.height;
         this.nameSprite.x = 0;
-        this.nameSprite.y = this.currentSprite.height;
+        this.nameSprite.y = 0;
 
         this.pview.addChild(this.currentSprite);
         this.pview.addChild(this.nameSprite);
@@ -58,16 +58,16 @@ export class Player {
     changeAnimation(animation: AnimatedSprite, reverse: boolean = false): void {
         this.pview.removeChild(this.currentSprite);
         this.currentSprite = animation;
+        this.currentSprite.x = 0;
+        this.currentSprite.y = this.nameSprite.height;
         this.currentSprite.scale.y = this.playerScale;
         this.currentSprite.animationSpeed = 0.1;
 
         if(reverse){
             this.currentSprite.scale.x = -this.playerScale;
-            this.currentSprite.x = this.pview.width;
         }
 	    else{
             this.currentSprite.scale.x = this.playerScale;
-            this.currentSprite.x = 0;
         }
 
         this.currentSprite.play();
