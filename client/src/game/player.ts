@@ -58,14 +58,18 @@ export class Player {
     changeAnimation(animation: AnimatedSprite, reverse: boolean = false): void {
         this.pview.removeChild(this.currentSprite);
         this.currentSprite = animation;
-        this.currentSprite.x = 0;
-        this.currentSprite.y = 0;
         this.currentSprite.scale.y = this.playerScale;
         this.currentSprite.animationSpeed = 0.1;
-        if(reverse)
+
+        if(reverse){
             this.currentSprite.scale.x = -this.playerScale;
-	    else
+            this.currentSprite.x = this.pview.width;
+        }
+	    else{
             this.currentSprite.scale.x = this.playerScale;
+            this.currentSprite.x = 0;
+        }
+
         this.currentSprite.play();
         this.pview.addChild(this.currentSprite);
     }

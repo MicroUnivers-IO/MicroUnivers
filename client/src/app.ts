@@ -45,7 +45,7 @@ function resizeHandler(): void {
     initApp();
 }
 
-//TODO: Needs to be fixed : The player's speed changes from a computer to another.
+//TODO: Needs to be fixed : The player's speed changes from a computer to another. (Does it?)
 //TODO: Needs to be fixed : The player's speed changes after resize (related to above?).
 /**
  * Moves the player according to the key pressed.
@@ -84,7 +84,8 @@ function move(): void {
 	mapY = mapContainer.y;
 }
 
-//TODO: Needs to be fixed : The reverse effect moves the player (probably because the container has wrong dimensions).
+//TODO: Needs to be fixed : The reverse effect moves the player.
+//TEMPORARY fix: changed Sprite position on reverse in player.changeAnimation()
 /**
  * Manages the player's walking animation.
  * 
