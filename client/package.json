@@ -15,6 +15,7 @@
     "@pixi/tilemap": "^3.2.2",
     "esbuild": "^0.14.30",
     "fast-simplex-noise": "^4.0.0",
+    "fractal-noise": "^1.2.0",
     "pixi.js": "^6.3.0"
   }
 }

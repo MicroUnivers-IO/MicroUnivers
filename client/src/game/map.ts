@@ -1,6 +1,7 @@
 import { Container } from "pixi.js";
 import { CompositeRectTileLayer } from "@pixi/tilemap";
 import { makeNoise2D } from "fast-simplex-noise";
+import { makeRectangle, Noise2Fn } from 'fractal-noise';
 
 /**
  * Class representing the game map.
@@ -10,9 +11,7 @@ import { makeNoise2D } from "fast-simplex-noise";
  * and use the {@link getView} method to get the game view.
  */
 export class GameMap {
-    private mapNoise: Function;
     private mapContainer: Container;
-    private ground: CompositeRectTileLayer;
     private tileSize: number;
     private width: number;
     private height: number;
@@ -23,8 +22,6 @@ export class GameMap {
         this.width = w;
         this.height = h;
 
-        this.data = [];
-        this.mapNoise = makeNoise2D();
         this.data = this.perlinGeneration();
     }
 
@@ -46,8 +43,10 @@ export class GameMap {
         let screenY:number;
 
         this.mapContainer = new Container();
-        this.ground = new CompositeRectTileLayer();        
-
+        let ground = new CompositeRectTileLayer(); 
+        let rockTiles = new CompositeRectTileLayer();
+        let rockLayer = makeRectangle(this.width, this.height, this.noiseToTile, {frequency: 0.05, octaves: 8});;
+        
         // Adding the map's tiles. Goes through all the data matrix to add the tiles.
         // The tile's x and y position are calculated by multiplying the i and j indexes by the size of a tile.
         // 1 tile = 32px, so (i,j) = (x,y) = (i*32, j*32)
@@ -59,11 +58,16 @@ export class GameMap {
                 screenY =  mapY * this.tileSize;
 
                 tileAtPos = this.data[mapX][mapY];
+                if(rockLayer[i][j] >= 20){
+                    tileTexture = 'assets/tileset/field_' + (tileAtPos*2).toString().padStart(2, '0') + '.png';
+                    rockTiles.addFrame(tileTexture, screenX, screenY);
+                }
                 tileTexture = 'assets/tileset/field_' + tileAtPos.toString().padStart(2, '0') + '.png';
-                this.ground.addFrame(tileTexture, screenX, screenY);
+                ground.addFrame(tileTexture, screenX, screenY);
             }
         }
-        this.mapContainer.addChild(this.ground);
+        this.mapContainer.addChild(ground);
+        this.mapContainer.addChild(rockTiles);
     }
 
     /**
@@ -75,14 +79,21 @@ export class GameMap {
      * @returns A two dimensional array containing the map's data.
      */
     perlinGeneration(): number[][] {
-        let res: number[][] = [];
-        for(let i = 0; i < this.height; i++){
-            res[i] = [];
-            for(let j = 0; j < this.width; j++)
-                res[i][j] = Math.abs(Math.floor(this.mapNoise(i,j)*31))+1;
-        }
-
+        let res = new Array(this.width);
+        res = makeRectangle(this.width, this.height, this.noiseToTile);
         return res;
+    }
+
+    /**
+     * Creates a function that calculates the tile number based on a noise value.
+     *  
+     * @param x The x coordinate of the tile
+     * @param y The y coordinate of the tile
+     * @returns An integer representing the tile number
+     */
+    noiseToTile(x:number, y:number):number {
+        let noise:Noise2Fn = makeNoise2D();
+        return Math.abs(Math.floor(noise(x,y) * 31))+1;
     }
 
     getView():Container {
