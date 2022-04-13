@@ -1,7 +1,10 @@
+import { randomUUID } from "crypto";
 import uWS from "uWebSockets.js";
-import { Lobby } from "../server";
+import { State } from "../State";
 
 
-export const openHandler = (lobby: Lobby, ws: uWS.WebSocket) => {
-    console.log("sockets oppened");
+export const openHandler = (ws: uWS.WebSocket, state: State) => {
+    console.log("socket oppened");
+    ws.id = randomUUID(); 
+    state.toQueue(ws);
 };

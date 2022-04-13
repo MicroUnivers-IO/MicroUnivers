@@ -12,24 +12,71 @@
 
 </style>
 <body>
-
+    
     <button onclick="connectToSocket()">(Re)Connexion a la socket</button>
+    <button onclick="disconnect()">deconnexion</button>
+
     <button onclick="sendMsg()">Envoyer Message</button>
     
     <textarea id="msg" placeholder="JSONOBJECT"></textarea>
     <script>
         let textarea = document.getElementById("msg");
         let ws;
+
         function connectToSocket() {
             console.log("Procédure de connexion lancée...🤖")
             if(ws) ws.close();
             ws = new WebSocket("ws://127.0.0.1:7777/ws");
+            
+            ws.onopen = () =>{
+                console.log("socket ouverte")
+
+                let handshakeMSG = {
+                    type: "CLI_HANDSHAKE",
+                    id: 1
+                }
+
+                console.log(JSON.stringify(handshakeMSG))
+
+                ws.send(JSON.stringify(handshakeMSG))
+
+                document.addEventListener('keydown', (event) => {
+                    let keyevent
+                    
+                    console.log("key pressed : " +  event.key)
+
+                    switch(event.key){
+                        case 'a': keyevent =  "MOVE_WEST"; break;
+                        case 'w': keyevent =  "MOVE_NORTH"; break;
+                        case 'd': keyevent =  "MOVE_EAST"; break;
+                        case 's': keyevent =  "MOVE_SOUTH"; break;
+                        default: return console.log("no such key supported");
+                    }
+                    
+                    let updateMSG = {
+                        type: "CLI_UPDATE",
+                        event: keyevent,
+                    }
+
+                    ws.send(JSON.stringify(updateMSG))
+                })
+            }
+
         }
+
+        function disconnect(){
+            if(!ws) return console.log("no socket connected")
+            document.removeEventListener("keypress")
+            ws.close();
+            console.log("socket closed")
+        }
+
         function sendMsg() {
-            ws.send(textarea.innerText);
+            ws.send(JSON.stringify(textarea.innerText));
         }
 
     </script>
+
 </body>
 
 </html>

@@ -3,6 +3,5 @@ export const PLAYER_EVENTS = Object.freeze({
     MOVE_EAST : "MOVE_EAST",
     MOVE_SOUTH : "MOVE_SOUTH",
     MOVE_NORTH : "MOVE_NORTH",
-    ATTACK_MELEE: "ATTACK_MELEE",
-    ATTACK_RANGE: "ATTACK_RANGE"
+    ATTACK: "ATTACK",
 });

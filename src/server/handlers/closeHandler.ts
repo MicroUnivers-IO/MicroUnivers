@@ -1,7 +1,8 @@
 import uWS from "uWebSockets.js";
-import { Lobby } from "../server";
+import { State } from "../State";
 
 
-export const closeHandler = (lobby: Lobby, ws: uWS.WebSocket, code: number, msg: ArrayBuffer) => {
-    console.log("sockets closed");
+export const closeHandler = (ws: uWS.WebSocket, code: number, msg: ArrayBuffer, state: State) => {
+    if(ws.authenticated) state.removePlayer(ws);
+    console.log("sockets closed : " + ws.id);
 };
