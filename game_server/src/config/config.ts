@@ -1,1 +1,0 @@
-export const TICK_SEC = 20;
