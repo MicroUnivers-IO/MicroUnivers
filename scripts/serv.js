@@ -1,16 +1,4 @@
-const path = require("path");
 const fs = require("fs");
-let files = [];
-
-function getEntryPoints(Directory) {
-    fs.readdirSync(Directory).forEach(File => {
-        const Absolute = path.join(Directory, File);
-        if (fs.statSync(Absolute).isDirectory()) return getEntryPoints(Absolute);
-        else return files.push(Absolute);
-    });
-}
-
-getEntryPoints("./src/server/");
 
 require("esbuild").build({
     entryPoints: ["./src/server/server.ts"],
