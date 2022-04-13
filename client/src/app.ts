@@ -1,4 +1,4 @@
-import { Application, AnimatedSprite, Texture, Sprite, Loader, Spritesheet, Container } from 'pixi.js'
+import { Application, AnimatedSprite, Spritesheet, Container } from 'pixi.js'
 import { GameMap } from './game/map';
 import { Player } from './game/player';
 
@@ -29,7 +29,6 @@ let dPressed: boolean;
 // Map related data
 let map:GameMap;
 let mapContainer: Container;
-let mapData;
 let mapX: number;
 let mapY: number;
 
@@ -71,17 +70,18 @@ function move(): void {
 	if(dPressed) {
 		movementVector[0] -= 1;
 	}
-
 	let movementMagnitude:number = Math.sqrt(movementVector[0] * movementVector[0] + movementVector[1] * movementVector[1]);
-	movementVector = [(movementVector[0] / movementMagnitude) * player.getSpeed(),
-					 (movementVector[1] / movementMagnitude) * player.getSpeed()];
+	if(movementMagnitude != 0) {
+		movementVector = [(movementVector[0] / movementMagnitude) * player.getSpeed(),
+						(movementVector[1] / movementMagnitude) * player.getSpeed()];
 
-	mapContainer.position.x += movementVector[0];
-	mapContainer.position.y += movementVector[1];
-	playerXpos += movementVector[0];
-	playerYpos += movementVector[1];
-	mapX = mapContainer.x;
-	mapY = mapContainer.y;
+		mapContainer.position.x += movementVector[0];
+		mapContainer.position.y += movementVector[1];
+		playerXpos += movementVector[0];
+		playerYpos += movementVector[1];
+		mapX = mapContainer.x;
+		mapY = mapContainer.y;
+	}
 }
 
 //TODO: Needs to be fixed : The reverse effect moves the player.
