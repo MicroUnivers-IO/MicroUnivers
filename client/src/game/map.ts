@@ -31,14 +31,14 @@ export class GameMap {
      * @param screenWidth Current screen width
      * @param screenHeight Current screen height
      */
-    generateView(screenWidth: number, screenHeight: number):void {
+    generateView():void {
         this.mapContainer = new Container();
         let ground = new CompositeRectTileLayer();
         let grass = new CompositeRectTileLayer();
         let bushes = new CompositeRectTileLayer();
         let trees = new CompositeRectTileLayer();
 
-        let mapData = this.normalizeData(this.perlinGeneration(256, 0.04, 8));
+        let mapData = this.normalizeData(this.perlinGeneration(32, 0.04, 8));
         
         // The tile's x and y position are calculated by multiplying the i and j indexes by the size of a tile.
         // 1 tile = 32px, so (i,j) = (x,y) = (i*32, j*32)
