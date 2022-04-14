@@ -18,6 +18,9 @@
 
     <button onclick="sendMsg()">Envoyer Message</button>
     
+    <input type="text" placeholder="url" id="url">
+    <input type="text" placeholder="pseudo" id="pseudo">
+
     <textarea id="msg" placeholder="JSONOBJECT"></textarea>
     <script>
         let textarea = document.getElementById("msg");
@@ -26,14 +29,14 @@
         function connectToSocket() {
             console.log("Procédure de connexion lancée...🤖")
             if(ws) ws.close();
-            ws = new WebSocket("ws://127.0.0.1:7777/dev");
+            ws = new WebSocket("ws://127.0.0.1:7777/" + document.getElementById("url").value);
             
             ws.onopen = () =>{
-                console.log("socket ouverte")
+                console.log("> Socket connectée.")
 
                 let handshakeMSG = {
                     type: "CLI_HANDSHAKE",
-                    id: 1
+                    username: document.getElementById("pseudo").value
                 }
 
                 console.log(JSON.stringify(handshakeMSG))
@@ -60,6 +63,13 @@
 
                     ws.send(JSON.stringify(updateMSG))
                 })
+            }
+
+            ws.onmessage = (msg) => {
+                
+                try {
+                    console.log(JSON.parse(msg.data).msg);
+                } catch(e) {}
             }
 
         }

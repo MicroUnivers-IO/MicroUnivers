@@ -4,6 +4,7 @@ let previousTick = Date.now();
 let actualTicks = 0;
 
 export const serverLoop  = (callback: VoidFunction) => {
+  // eslint-disable-next-line prefer-const
   let now = Date.now();
 
   actualTicks++;

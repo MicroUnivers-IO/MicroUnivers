@@ -32,7 +32,7 @@ export class Lobby{
             },
         
             message: (ws, msg, isBinary) => {
-                messageHandler(ws, msg, isBinary, this.state);
+                messageHandler(ws, msg, isBinary, this);
             },
         
             close: (ws, code, msg) => {
@@ -41,13 +41,23 @@ export class Lobby{
         
         });
 
+        setInterval(() => {
+            app.publish(PROTOCOLS.UPDATE + this.lobbyURL, JSON.stringify({ msg: this.lobbyURL + "   --   " + JSON.stringify(this.state.getPlayers()) }));
+        }, 2000)
+        
         // serverLoop(() => {
-        //     app.publish(PROTOCOLS.UPDATE, JSON.stringify(this.state.getPlayers()))
+        //     app.publish(PROTOCOLS.UPDATE + lobbyURL, JSON.stringify(this.state.getPlayers()))
 
-        // })
+        // });
     }
 
 
-    
+    getUrl() {
+        return this.lobbyURL;
+    }
+
+    getState() {
+        return this.state;
+    }
 
 }

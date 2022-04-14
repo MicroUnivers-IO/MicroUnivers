@@ -1,4 +1,4 @@
-import { Iplayer } from "../lib/model/Iplayer";
+import { Iplayer } from "../lib/types/Iplayer";
 import uWS from "uWebSockets.js";
 
 export class State{
@@ -7,7 +7,7 @@ export class State{
     
     constructor(){
         this.queue = [];
-        this. players = [];
+        this.players = [];
     }
 
     public toQueue(ws: uWS.WebSocket){
@@ -17,27 +17,28 @@ export class State{
 
     }
 
-    public removeFromQueue(ws: uWS.WebSocket){
-        this.queue.filter((val, i, arr) => {return val.id != ws.id});
-        console.log("removed from queue");
+    public removeFromQueue(ws: uWS.WebSocket, closeSocket: boolean){
+        this.queue = this.queue.filter((val) => {return val.id != ws.id});
+        if(closeSocket) ws.close();
     }
 
-    public addPlayer(ws: uWS.WebSocket, id: number){
-        let p: Iplayer ={
+    public addPlayer(ws: uWS.WebSocket, options: any){
+
+        const p: Iplayer ={
             socket: ws,
-            username: "jose", //get from db
+            username: options.username, //get from db
             x: 0, //default
             y: 0 //default
         };
 
-        ws.authenticated = true;
+        ws.authenticated = true; // communication avec la bdd --> dans OPTIONS il y aura un JWT
 
         this.players.push(p);
-        console.log("added player");
+        // si la connexion marche pas removeFromQueue(ws);
     }
 
     public removePlayer(ws: uWS.WebSocket): void{
-        this.players.filter((val, i, arr) => {return val.socket.id != ws.id;});
+        this.players = this.players.filter((val) => { return val.socket.id != ws.id; });
     }
 
     public getPlayers(){
