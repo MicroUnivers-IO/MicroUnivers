@@ -1,5 +1,7 @@
 import { Container } from "pixi.js";
 import { CompositeRectTileLayer } from "@pixi/tilemap";
+import { makeNoise2D } from "fast-simplex-noise";
+import { makeRectangle, Noise2Fn } from 'fractal-noise';
 
 /**
  * Class representing the game map.
@@ -10,20 +12,18 @@ import { CompositeRectTileLayer } from "@pixi/tilemap";
  */
 export class GameMap {
     private mapContainer: Container;
-    private ground: CompositeRectTileLayer;
     private tileSize: number;
     private width: number;
     private height: number;
-    private data:number[][];
+    private mapData:number[][];
+    private collisions:number[][];
 
-    constructor(data:number[][], ts:number = 32, w:number = 100, h:number = 100) {
-        this.data = data;
+    constructor(w:number = 100, h:number = 100, ts:number = 32) {
         this.tileSize = ts;
         this.width = w;
         this.height = h;
 
-        this.mapContainer = new Container();
-        this.ground = new CompositeRectTileLayer();        
+        this.mapData = this.normalizeData(this.perlinGeneration(32, 0.04, 25));
     }
 
     /**
@@ -35,30 +35,97 @@ export class GameMap {
      * @param screenWidth Current screen width
      * @param screenHeight Current screen height
      */
-    generateView(screenWidth: number, screenHeight: number):void {
-        let tileAtPos:number;
-        let tileTexture:string;
-        let mapX:number;
-        let mapY:number;
-        let screenX:number;
-        let screenY:number;
+    generateView():void {
+        this.mapContainer = new Container();
+        let ground = new CompositeRectTileLayer();
+        let grass = new CompositeRectTileLayer();
+        let bushes = new CompositeRectTileLayer();
+        let trees = new CompositeRectTileLayer();
 
-        // Adding the map's tiles. Goes through all the data matrix to add the tiles.
+        this.collisions = new Array();
+
+        
         // The tile's x and y position are calculated by multiplying the i and j indexes by the size of a tile.
         // 1 tile = 32px, so (i,j) = (x,y) = (i*32, j*32)
         for (let i = 0; i < this.height; i++) {
-            for (let j = 0; j < this.width; j++) {
-                mapX = j;
-                mapY = i;
-                screenX =  mapX * this.tileSize;
-                screenY =  mapY * this.tileSize;
+            this.collisions[i] = new Array();
 
-                tileAtPos = this.data[mapX][mapY];
-                tileTexture = 'assets/tileset/field_' + tileAtPos.toString().padStart(2, '0') + '.png';
-                this.ground.addFrame(tileTexture, screenX, screenY);
+            for (let j = 0; j < this.width; j++) {
+                let mapX:number = j;
+                let mapY:number = i;
+                let screenX:number =  mapX * this.tileSize;
+                let screenY:number =  mapY * this.tileSize;
+
+                this.collisions[i][j] = 0;
+
+                ground.addFrame(this.randomTile('field', 32), screenX, screenY);
+
+                if(this.mapData[mapX][mapY] < 0.2) {
+                    grass.addFrame(this.randomTile('grass', 16), screenX, screenY);
+                }
+                if(this.mapData[mapX][mapY] < 0.05) {
+                    trees.addFrame(this.randomTile('trees', 3), screenX, screenY);
+                }
+                if(this.mapData[mapX][mapY] < 0.0001) {
+                    bushes.addFrame(this.randomTile('bush', 6), screenX, screenY);
+                }
+
             }
         }
-        this.mapContainer.addChild(this.ground);
+
+        this.mapContainer.addChild(ground);
+        this.mapContainer.addChild(grass);
+        this.mapContainer.addChild(bushes);
+        this.mapContainer.addChild(trees);
+    }
+
+    perlinGeneration(size:number, freq:number, oct:number): number[][] {
+        let res = new Array(this.width);
+
+        res = makeRectangle(this.width, this.height, 
+            function(x:number, y:number): number {
+                let noise:Noise2Fn = makeNoise2D();
+                return noise(x,y) * (size-1) + 1;
+            }, {
+                frequency: freq,
+                octaves: oct
+            });
+        
+        return res;
+    }
+
+    normalizeData(data):number[][] {
+        let max: number = Math.max.apply(null, data[0]);
+        let min: number = Math.min.apply(null, data[0]);
+
+        for (let i = 1; i < this.height; i++) {
+            let maxTemp:number = Math.max.apply(null, data[0]);
+            let minTemp:number = Math.min.apply(null, data[0]);
+
+            if(maxTemp > max)
+                max = maxTemp;
+            if(minTemp < min)
+                min = minTemp;
+        }
+
+        let res = new Array(this.height);
+        for (let i = 0; i < this.height; i++) {
+            res[i] = new Array(this.width);
+            for (let j = 0; j < this.width; j++) {
+                res[i][j] = (data[i][j] - min) / (max - min);
+            }
+        }
+        return res;
+    }
+
+    randomTile(tileCateg:string, maxTile:number):string {
+        let tileNb:string = (Math.floor(Math.random() * (maxTile-1))+1).toString().padStart(2, '0');
+        let tileTexture:string = 'assets/tileset/'+ tileCateg +'_'+ tileNb +'.png';
+        return tileTexture;
+    }
+
+    getCollisionAt(x:number, y:number):boolean {
+        return this.collisions[x][y] == 1 ? true : false;
     }
 
     getView():Container {
