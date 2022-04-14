@@ -21,6 +21,8 @@
     "@pixi/tilemap": "^3.2.2",
     "@types/node": "^17.0.23",
     "esbuild": "^0.14.36",
+    "fast-simplex-noise": "^4.0.0",
+    "fractal-noise": "^1.2.0",
     "pixi.js": "^6.3.0",
     "uWebSockets.js": "uNetworking/uWebSockets.js#v20.3.0"
   },

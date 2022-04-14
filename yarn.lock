@@ -826,6 +826,11 @@
   "resolved" "https://registry.npmjs.org/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz"
   "version" "2.0.6"
 
+"fast-simplex-noise@^4.0.0":
+  "integrity" "sha512-2zRCJkPdMnPyXNEeI5IYgH555Nbd/j9nC8YVoOm5dmFDjqxuLD888nEAGB8cSUIyxLlNHCZVlZ7AO27Fm3boJA=="
+  "resolved" "https://registry.npmjs.org/fast-simplex-noise/-/fast-simplex-noise-4.0.0.tgz"
+  "version" "4.0.0"
+
 "fastq@^1.6.0":
   "integrity" "sha512-YpkpUnK8od0o1hmeSc7UUs/eB/vIPWJYjKck2QKIzAf71Vm1AAQ3EbuZB3g2JIy+pg+ERD0vqI79KyZiB2e2Nw=="
   "resolved" "https://registry.npmjs.org/fastq/-/fastq-1.13.0.tgz"
@@ -859,6 +864,11 @@
   "integrity" "sha512-WIWGi2L3DyTUvUrwRKgGi9TwxQMUEqPOPQBVi71R96jZXJdFskXEmf54BoZaS1kknGODoIGASGEzBUYdyMCBJg=="
   "resolved" "https://registry.npmjs.org/flatted/-/flatted-3.2.5.tgz"
   "version" "3.2.5"
+
+"fractal-noise@^1.2.0":
+  "integrity" "sha512-H1B2d45cSDSlIsy+dA5/kpiTsHG4EEGQCt9jlWXj8o4Hq0vMXQ4MEVYHJPTYU4ehaSe9NwX0j1VEMfWCcfS4UA=="
+  "resolved" "https://registry.npmjs.org/fractal-noise/-/fractal-noise-1.2.0.tgz"
+  "version" "1.2.0"
 
 "fs.realpath@^1.0.0":
   "integrity" "sha1-FQStJSMVjKpA20onh8sBQRmU6k8="

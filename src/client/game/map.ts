@@ -16,12 +16,12 @@ export class GameMap {
     private width: number;
     private height: number;
     private mapData:number[][];
-    private collisions:number[][];
 
     constructor(w:number = 100, h:number = 100, ts:number = 32) {
         this.tileSize = ts;
         this.width = w;
         this.height = h;
+        this.mapContainer = new Container();
 
         this.mapData = this.normalizeData(this.perlinGeneration(32, 0.04, 25));
     }
@@ -36,27 +36,19 @@ export class GameMap {
      * @param screenHeight Current screen height
      */
     generateView():void {
-        this.mapContainer = new Container();
         let ground = new CompositeRectTileLayer();
         let grass = new CompositeRectTileLayer();
         let bushes = new CompositeRectTileLayer();
         let trees = new CompositeRectTileLayer();
-
-        this.collisions = new Array();
-
         
         // The tile's x and y position are calculated by multiplying the i and j indexes by the size of a tile.
         // 1 tile = 32px, so (i,j) = (x,y) = (i*32, j*32)
         for (let i = 0; i < this.height; i++) {
-            this.collisions[i] = new Array();
-
             for (let j = 0; j < this.width; j++) {
                 let mapX:number = j;
                 let mapY:number = i;
                 let screenX:number =  mapX * this.tileSize;
                 let screenY:number =  mapY * this.tileSize;
-
-                this.collisions[i][j] = 0;
 
                 ground.addFrame(this.randomTile('field', 32), screenX, screenY);
 
@@ -94,7 +86,7 @@ export class GameMap {
         return res;
     }
 
-    normalizeData(data):number[][] {
+    normalizeData(data: number[][]):number[][] {
         let max: number = Math.max.apply(null, data[0]);
         let min: number = Math.min.apply(null, data[0]);
 
@@ -122,10 +114,6 @@ export class GameMap {
         let tileNb:string = (Math.floor(Math.random() * (maxTile-1))+1).toString().padStart(2, '0');
         let tileTexture:string = 'assets/tileset/'+ tileCateg +'_'+ tileNb +'.png';
         return tileTexture;
-    }
-
-    getCollisionAt(x:number, y:number):boolean {
-        return this.collisions[x][y] == 1 ? true : false;
     }
 
     getView():Container {

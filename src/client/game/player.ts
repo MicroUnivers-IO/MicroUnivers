@@ -13,7 +13,7 @@ export class Player {
     private name: string;
     private nameSprite: Text;
     private currentSprite: AnimatedSprite;
-    private walking: boolean;
+    private walking: boolean = false;
     private playerScale: number;
     private playerSpeed: number;
 
