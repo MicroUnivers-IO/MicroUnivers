@@ -7,10 +7,13 @@ const app = new Application({
 	view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
 	resolution: window.devicePixelRatio || 1,
 	autoDensity: true,
-	backgroundColor: 0x6495ed,
-	width: window.innerWidth,
-	height: window.innerHeight,
+	resizeTo: window,
+	backgroundColor: 0x6495ed
 });
+
+// General data
+let currentWidth: number = window.innerWidth;
+let currentHeight: number = window.innerHeight;
 
 // Player related data
 let player: Player;
@@ -32,20 +35,25 @@ let mapContainer: Container;
 let mapX: number;
 let mapY: number;
 
-//TODO: Needs to be fixed : Reloading the assets moves the player's position on the map.
 /**
  * Manages the event triggered by resizing the app.
  * 
  * Reloads the game's resources according to the new dimensions.
  */
 function resizeHandler(): void {
-	app.stage.removeChildren();
-	app.renderer.resize(window.innerWidth, window.innerHeight);
-    initApp();
+	let offsetW:number = currentWidth - window.innerWidth;
+	let offsetH:number = currentHeight - window.innerHeight;
+
+	mapContainer.x = Math.floor(mapContainer.x - (offsetW / 2));
+	mapContainer.y = Math.floor(mapContainer.y - (offsetH / 2));
+	
+	playerView.x = Math.floor(window.innerWidth/2);
+	playerView.y = Math.floor(window.innerHeight/2);
+
+	currentWidth = window.innerWidth;
+	currentHeight = window.innerHeight;
 }
 
-//TODO: Needs to be fixed : The player's speed changes from a computer to another. (Does it?)
-//TODO: Needs to be fixed : The player's speed changes after resize (related to above?).
 /**
  * Moves the player according to the key pressed.
  * 
@@ -77,6 +85,8 @@ function move(): void {
 
 		mapContainer.position.x += movementVector[0];
 		mapContainer.position.y += movementVector[1];
+
+
 		playerXpos += movementVector[0];
 		playerYpos += movementVector[1];
 		mapX = mapContainer.x;
@@ -84,8 +94,6 @@ function move(): void {
 	}
 }
 
-//TODO: Needs to be fixed : The reverse effect moves the player.
-//TEMPORARY fix: changed Sprite position on reverse in player.changeAnimation()
 /**
  * Manages the player's walking animation.
  * 
@@ -222,11 +230,11 @@ function initApp():void {
 	// Creating the player
 	playerSpriteSheet = app.loader.resources["playerSpritesheet"].spritesheet;
 	playerAnimation = new AnimatedSprite(playerSpriteSheet.animations["idle"]);
-	player = new Player("José", playerAnimation);
+	player = new Player("José", playerAnimation, 6);
 	playerView = player.getView();
 
 	// Creating the map
-	map = new GameMap();
+	map = new GameMap(100, 100);
 	map.generateView();
 	mapContainer = map.getView();
 
@@ -241,7 +249,7 @@ function initApp():void {
 	app.stage.addChild(playerView);
 
 	// Setting the app's ticker for movement
-	app.ticker.add(move, 150);
+	app.ticker.add(move, 16,66);
 }
 
 // Sets the position of the player and places the map accordingly

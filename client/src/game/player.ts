@@ -17,9 +17,9 @@ export class Player {
     private playerScale: number;
     private playerSpeed: number;
 
-    constructor(playerName:string, animation:AnimatedSprite, scale:number = 1.5, speed:number = 3) {
+    constructor(playerName:string, animation:AnimatedSprite, speed:number = 3) {
         this.name = playerName;
-        this.playerScale = scale;
+        this.playerScale = 1.5;
         this.playerSpeed = speed;
 
         this.currentSprite = animation;
@@ -65,9 +65,11 @@ export class Player {
 
         if(reverse){
             this.currentSprite.scale.x = -this.playerScale;
+            this.currentSprite.x = this.currentSprite.width;
         }
 	    else{
             this.currentSprite.scale.x = this.playerScale;
+            this.currentSprite.x = 0;
         }
 
         this.currentSprite.play();
