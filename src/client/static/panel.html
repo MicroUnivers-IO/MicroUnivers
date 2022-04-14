@@ -26,7 +26,7 @@
         function connectToSocket() {
             console.log("Procédure de connexion lancée...🤖")
             if(ws) ws.close();
-            ws = new WebSocket("ws://127.0.0.1:7777/ws");
+            ws = new WebSocket("ws://127.0.0.1:7777/dev");
             
             ws.onopen = () =>{
                 console.log("socket ouverte")
@@ -40,7 +40,7 @@
 
                 ws.send(JSON.stringify(handshakeMSG))
 
-                document.addEventListener('keydown', (event) => {
+                document.addEventListener('keypress', (event) => {
                     let keyevent
                     
                     console.log("key pressed : " +  event.key)

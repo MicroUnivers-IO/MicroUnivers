@@ -1,5 +1,5 @@
 node_modules/
 dist
 */dist/
-client/static/bundle-microunivers.js
+*/bundle-microunivers.js
 *.vscode
