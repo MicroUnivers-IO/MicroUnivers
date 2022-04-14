@@ -1,4 +1,4 @@
-import { Application, AnimatedSprite, Texture, Sprite, Loader, Spritesheet, Container } from 'pixi.js'
+import { Application, AnimatedSprite, Spritesheet, Container } from 'pixi.js'
 import { GameMap } from './game/map';
 import { Player } from './game/player';
 
@@ -7,10 +7,13 @@ const app = new Application({
 	view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
 	resolution: window.devicePixelRatio || 1,
 	autoDensity: true,
-	backgroundColor: 0x6495ed,
-	width: window.innerWidth,
-	height: window.innerHeight,
+	resizeTo: window,
+	backgroundColor: 0x6495ed
 });
+
+// General data
+let currentWidth: number = window.innerWidth;
+let currentHeight: number = window.innerHeight;
 
 // Player related data
 let player: Player;
@@ -29,24 +32,28 @@ let dPressed: boolean;
 // Map related data
 let map:GameMap;
 let mapContainer: Container;
-let mapData;
 let mapX: number;
 let mapY: number;
 
-//TODO: Needs to be fixed : Reloading the assets moves the player's position on the map.
 /**
  * Manages the event triggered by resizing the app.
  * 
  * Reloads the game's resources according to the new dimensions.
  */
 function resizeHandler(): void {
-	app.stage.removeChildren();
-	app.renderer.resize(window.innerWidth, window.innerHeight);
-    initApp();
+	let offsetW:number = currentWidth - window.innerWidth;
+	let offsetH:number = currentHeight - window.innerHeight;
+
+	mapContainer.x = Math.floor(mapContainer.x - (offsetW / 2));
+	mapContainer.y = Math.floor(mapContainer.y - (offsetH / 2));
+	
+	playerView.x = Math.floor(window.innerWidth/2);
+	playerView.y = Math.floor(window.innerHeight/2);
+
+	currentWidth = window.innerWidth;
+	currentHeight = window.innerHeight;
 }
 
-//TODO: Needs to be fixed : The player's speed changes from a computer to another. (Does it?)
-//TODO: Needs to be fixed : The player's speed changes after resize (related to above?).
 /**
  * Moves the player according to the key pressed.
  * 
@@ -71,21 +78,22 @@ function move(): void {
 	if(dPressed) {
 		movementVector[0] -= 1;
 	}
-
 	let movementMagnitude:number = Math.sqrt(movementVector[0] * movementVector[0] + movementVector[1] * movementVector[1]);
-	movementVector = [(movementVector[0] / movementMagnitude) * player.getSpeed(),
-					 (movementVector[1] / movementMagnitude) * player.getSpeed()];
+	if(movementMagnitude != 0) {
+		movementVector = [(movementVector[0] / movementMagnitude) * player.getSpeed(),
+						(movementVector[1] / movementMagnitude) * player.getSpeed()];
 
-	mapContainer.position.x += movementVector[0];
-	mapContainer.position.y += movementVector[1];
-	playerXpos += movementVector[0];
-	playerYpos += movementVector[1];
-	mapX = mapContainer.x;
-	mapY = mapContainer.y;
+		mapContainer.position.x += movementVector[0];
+		mapContainer.position.y += movementVector[1];
+
+
+		playerXpos += movementVector[0];
+		playerYpos += movementVector[1];
+		mapX = mapContainer.x;
+		mapY = mapContainer.y;
+	}
 }
 
-//TODO: Needs to be fixed : The reverse effect moves the player.
-//TEMPORARY fix: changed Sprite position on reverse in player.changeAnimation()
 /**
  * Manages the player's walking animation.
  * 
@@ -192,32 +200,24 @@ function handleKeyup(event: KeyboardEvent): void {
  * Loads the game's assets and resources.
  * 
  * Adds the player spritesheet to the app's loader.
- * Fetches the map's json to add its tiles to the app's loader.
+ * Also adds all the tiles png to the app's loader.
  */
 function loadResources(): void {
 	app.loader.add("playerSpritesheet", "assets/player/player.json");
 
-	fetch("./assets/tileset/field.json")
-	.then(response => {
-		return response.json();
-	})
-	.then((data) => {loadMap(data);})
-	.then( () => {app.loader.load();});
-}
-
-/**
- * Loads the map from the json data provided.
- * 
- * Creates a GameMap object from the data provided as a json object.
- * Also adds all the tiles png to the app's loader.
- * 
- * @param data The map's data
- */
-function loadMap(data: any):void {
-	mapData = data;
-	map = new GameMap(mapData.layers[0].data, mapData.tilewidth, mapData.width, mapData.height);
-	for (let i = 1; i < mapData.tilesets[0].tilecount; i++) 
+	for (let i = 1; i <= 32; i++) 
 		app.loader.add('assets/tileset/field_' + i.toString().padStart(2, '0') + '.png');
+
+	for (let i = 1; i <= 6; i++) 
+		app.loader.add('assets/tileset/bush_' + i.toString().padStart(2, '0') + '.png');
+
+	for (let i = 1; i <= 16; i++) 
+		app.loader.add('assets/tileset/grass_' + i.toString().padStart(2, '0') + '.png');
+
+	for (let i = 1; i <= 3; i++) 
+		app.loader.add('assets/tileset/trees_' + i.toString().padStart(2, '0') + '.png');
+
+	app.loader.load();
 }
 
 /**
@@ -228,13 +228,14 @@ function loadMap(data: any):void {
  */
 function initApp():void {
 	// Creating the player
-	playerSpriteSheet = app.loader.resources["playerSpritesheet"].spritesheet as Spritesheet;
+	playerSpriteSheet = app.loader.resources["playerSpritesheet"].spritesheet;
 	playerAnimation = new AnimatedSprite(playerSpriteSheet.animations["idle"]);
-	player = new Player("José", playerAnimation);
+	player = new Player("José", playerAnimation, 6);
 	playerView = player.getView();
 
 	// Creating the map
-	map.generateView(app.screen.width, app.screen.height);
+	map = new GameMap(100, 100);
+	map.generateView();
 	mapContainer = map.getView();
 
 	// Placing player and map
@@ -248,7 +249,7 @@ function initApp():void {
 	app.stage.addChild(playerView);
 
 	// Setting the app's ticker for movement
-	app.ticker.add(move, 150);
+	app.ticker.add(move, 16,66);
 }
 
 // Sets the position of the player and places the map accordingly
