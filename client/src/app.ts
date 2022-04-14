@@ -227,7 +227,7 @@ function initApp():void {
 
 	// Creating the map
 	map = new GameMap();
-	map.generateView(app.screen.width, app.screen.height);
+	map.generateView();
 	mapContainer = map.getView();
 
 	// Placing player and map
