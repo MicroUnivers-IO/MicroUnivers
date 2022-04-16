@@ -26,15 +26,6 @@ export class GameMap {
         this.mapData = this.normalizeData(this.perlinGeneration(32, 0.04, 25));
     }
 
-    /**
-     * Generates the view of the map.
-     * 
-     * Creates a CompositeRectileLayer as a tilemap and adds its tiles refering to the map's data.
-     * Then, it adds the tilemap to the map container.
-     * 
-     * @param screenWidth Current screen width
-     * @param screenHeight Current screen height
-     */
     generateView():void {
         let ground = new CompositeRectTileLayer();
         let grass = new CompositeRectTileLayer();
@@ -55,10 +46,10 @@ export class GameMap {
                 if(this.mapData[mapX][mapY] < 0.2) {
                     grass.addFrame(this.randomTile('grass', 16), screenX, screenY);
                 }
-                if(this.mapData[mapX][mapY] < 0.05) {
+                if(this.mapData[mapX][mapY] < 0.1) {
                     trees.addFrame(this.randomTile('trees', 3), screenX, screenY);
                 }
-                if(this.mapData[mapX][mapY] < 0.0001) {
+                if(this.mapData[mapX][mapY] < 0.01) {
                     bushes.addFrame(this.randomTile('bush', 6), screenX, screenY);
                 }
 
@@ -82,6 +73,8 @@ export class GameMap {
                 frequency: freq,
                 octaves: oct
             });
+
+        console.log(res);
         
         return res;
     }
@@ -91,8 +84,8 @@ export class GameMap {
         let min: number = Math.min.apply(null, data[0]);
 
         for (let i = 1; i < this.height; i++) {
-            let maxTemp:number = Math.max.apply(null, data[0]);
-            let minTemp:number = Math.min.apply(null, data[0]);
+            let maxTemp:number = Math.max.apply(null, data[i]);
+            let minTemp:number = Math.min.apply(null, data[i]);
 
             if(maxTemp > max)
                 max = maxTemp;
@@ -126,5 +119,9 @@ export class GameMap {
 
     getHeight():number {
         return this.height;
+    }
+
+    randomGenerator(){
+        return;
     }
 }

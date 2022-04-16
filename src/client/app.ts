@@ -1,4 +1,5 @@
 import { Application, AnimatedSprite, Spritesheet, Container } from 'pixi.js'
+import { moveEntity } from '../lib/game/movement/movement';
 import { GameMap } from './game/map';
 import { Player } from './game/player';
 
@@ -8,12 +9,13 @@ const app = new Application({
 	resolution: window.devicePixelRatio || 1,
 	autoDensity: true,
 	resizeTo: window,
-	backgroundColor: 0x6495ed
+	backgroundColor: 0x000000
 });
 
 // General data
 let currentWidth: number = window.innerWidth;
 let currentHeight: number = window.innerHeight;
+let cappedFPS:number = 60;
 
 // Player related data
 let player: Player;
@@ -61,31 +63,16 @@ function resizeHandler(): void {
  * The player stays centered on screen.
  */
 function move(): void {
-	if(!zPressed && !sPressed && !qPressed && !dPressed)
-		return;
+	if(app.ticker.deltaMS >= cappedFPS/1000) {
+		console.log('Frame Delta:'+app.ticker.deltaMS);
 
-	let movementVector: number[] = [0, 0];
+		if(!zPressed && !sPressed && !qPressed && !dPressed)
+			return;
+
+		let movementVector:number[] = moveEntity(zPressed, sPressed, qPressed, dPressed, player.getSpeed());
 	
-	if(zPressed) {
-		movementVector[1] += 1;
-	}
-	if(sPressed) {
-		movementVector[1] -= 1;
-	}
-	if(qPressed) {
-		movementVector[0] += 1;
-	}
-	if(dPressed) {
-		movementVector[0] -= 1;
-	}
-	let movementMagnitude:number = Math.sqrt(movementVector[0] * movementVector[0] + movementVector[1] * movementVector[1]);
-	if(movementMagnitude != 0) {
-		movementVector = [(movementVector[0] / movementMagnitude) * player.getSpeed(),
-						(movementVector[1] / movementMagnitude) * player.getSpeed()];
-
 		mapContainer.position.x += movementVector[0];
 		mapContainer.position.y += movementVector[1];
-
 
 		playerXpos += movementVector[0];
 		playerYpos += movementVector[1];
@@ -93,6 +80,7 @@ function move(): void {
 		mapY = mapContainer.y;
 	}
 }
+
 
 /**
  * Manages the player's walking animation.
@@ -228,9 +216,9 @@ function loadResources(): void {
  */
 function initApp():void {
 	// Creating the player
-	playerSpriteSheet = app.loader.resources["playerSpritesheet"].spritesheet;
+	playerSpriteSheet = app.loader.resources["playerSpritesheet"].spritesheet!;
 	playerAnimation = new AnimatedSprite(playerSpriteSheet.animations["idle"]);
-	player = new Player("José", playerAnimation, 6);
+	player = new Player("José", playerAnimation, 8);
 	playerView = player.getView();
 
 	// Creating the map
