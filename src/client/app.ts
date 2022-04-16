@@ -16,6 +16,7 @@ const app = new Application({
 let currentWidth: number = window.innerWidth;
 let currentHeight: number = window.innerHeight;
 let cappedFPS:number = 60;
+let timer: number = 0;
 
 // Player related data
 let player: Player;
@@ -63,22 +64,22 @@ function resizeHandler(): void {
  * The player stays centered on screen.
  */
 function move(): void {
-	if(app.ticker.deltaMS >= cappedFPS/1000) {
-		console.log('Frame Delta:'+app.ticker.deltaMS);
-
-		if(!zPressed && !sPressed && !qPressed && !dPressed)
-			return;
-
-		let movementVector:number[] = moveEntity(zPressed, sPressed, qPressed, dPressed, player.getSpeed());
+	let timeNow = new Date().getTime();
+	if(timeNow - timer <= 1000/cappedFPS || (!zPressed && !sPressed && !qPressed && !dPressed))
+		return;
 	
-		mapContainer.position.x += movementVector[0];
-		mapContainer.position.y += movementVector[1];
+	console.log('Frame Delta:'+app.ticker.deltaMS);
+	let movementVector:number[] = moveEntity(zPressed, sPressed, qPressed, dPressed, player.getSpeed());
 
-		playerXpos += movementVector[0];
-		playerYpos += movementVector[1];
-		mapX = mapContainer.x;
-		mapY = mapContainer.y;
-	}
+	mapContainer.position.x += movementVector[0];
+	mapContainer.position.y += movementVector[1]; 
+
+	playerXpos += movementVector[0];
+	playerYpos += movementVector[1];
+	mapX = mapContainer.x;
+	mapY = mapContainer.y;
+
+	timer = timeNow;
 }
 
 
@@ -237,7 +238,8 @@ function initApp():void {
 	app.stage.addChild(playerView);
 
 	// Setting the app's ticker for movement
-	app.ticker.add(move, 16,66);
+	app.ticker.deltaMS = 16.66;
+	app.ticker.add(move);
 }
 
 // Sets the position of the player and places the map accordingly
