@@ -1,16 +1,16 @@
-export function moveEntity(up:boolean, down:boolean, left:boolean, right:boolean, speed:number):number[]{
+export function moveEntity(directions: boolean[], speed:number):number[]{
     let movementVector: number[] = [0, 0];
 		
-		if(up) {
+		if(directions[0]) {
 			movementVector[1] += 1;
 		}
-		if(down) {
+		if(directions[1]) {
 			movementVector[1] -= 1;
 		}
-		if(left) {
+		if(directions[2]) {
 			movementVector[0] += 1;
 		}
-		if(right) {
+		if(directions[3]) {
 			movementVector[0] -= 1;
 		}
 

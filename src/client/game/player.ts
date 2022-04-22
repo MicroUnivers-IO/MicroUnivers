@@ -1,94 +1,58 @@
-import { Container, AnimatedSprite, Text } from 'pixi.js';
+import { Container, AnimatedSprite, Text, Spritesheet } from 'pixi.js';
+import { Animation } from './playerAnimations';
 
-/**
- * Class representing a player.
- * It contains a container that has the player sprite and his name.
- * Also has data related to its characteristics.
- * 
- * To use, create an instance of the object and use the {@link getView} method to get the player's view.
- */
-export class Player {
+export class Player extends Container {
 
-    private pview: Container
-    private name: string;
+    private animations: Animation;
     private nameSprite: Text;
     private currentSprite: AnimatedSprite;
     private walking: boolean = false;
-    private playerScale: number;
-    private playerSpeed: number;
 
-    constructor(playerName:string, animation:AnimatedSprite, speed:number = 3) {
-        this.name = playerName;
-        this.playerScale = 1.5;
-        this.playerSpeed = speed;
+    constructor(playerName:string, sheet:Spritesheet) {
+        super();
 
-        this.currentSprite = animation;
-        this.currentSprite.scale.x = this.playerScale;
-        this.currentSprite.scale.y = this.playerScale;
+        this.animations = new Animation(sheet);
+
+        this.currentSprite = this.animations.idleAnimation;
         this.currentSprite.animationSpeed = 0.1;
         this.currentSprite.play();
 
-        this.nameSprite = new Text(this.name, {fontFamily: 'Arial', fontSize: 12, fill: 0x000000, align: 'center'});
-        this.pview = new Container();
-        this.pview.width = this.currentSprite.width;
-        this.pview.height = this.currentSprite.height + this.nameSprite.height;
+        this.nameSprite = new Text(playerName, {
+            fontFamily: 'Arial', fontSize: 12, fill: 0x000000, align: 'center'
+        });
 
         this.currentSprite.x = 0;
         this.currentSprite.y = this.nameSprite.height;
         this.nameSprite.x = 0;
         this.nameSprite.y = 0;
 
-        this.pview.addChild(this.currentSprite);
-        this.pview.addChild(this.nameSprite);
+        this.addChild(this.currentSprite);
+        this.addChild(this.nameSprite);
     }
 
-    toggleWalk(): void {
-        this.walking = !this.walking;
-    }
-
-    /**
-     * Changes the player's animation.
-     * 
-     * Deletes the AnimatedSprite that was previously set and replaces it with the new one.
-     * The player's view needs to be re-added to the app after.
-     * 
-     * @param animation AnimatedSprite to change to
-     * @param reverse Whether the player should be facing left or right
-     */
     changeAnimation(animation: AnimatedSprite, reverse: boolean = false): void {
-        this.pview.removeChild(this.currentSprite);
-        this.currentSprite = animation;
-        this.currentSprite.x = 0;
-        this.currentSprite.y = this.nameSprite.height;
-        this.currentSprite.scale.y = this.playerScale;
-        this.currentSprite.animationSpeed = 0.1;
+        this.removeChild(this.currentSprite);
+        this.currentSprite.textures = animation.textures;
 
         if(reverse){
-            this.currentSprite.scale.x = -this.playerScale;
-            this.currentSprite.x = this.currentSprite.width;
+            this.currentSprite.scale.x = -1;
         }
 	    else{
-            this.currentSprite.scale.x = this.playerScale;
-            this.currentSprite.x = 0;
+            this.currentSprite.scale.x = 1;
         }
 
         this.currentSprite.play();
-        this.pview.addChild(this.currentSprite);
+        this.addChild(this.currentSprite);
     }
 
-    getView(): Container {
-        return this.pview;
-    }
+    manageWalk(reverse: boolean = false): void {
+        this.walking = !this.walking;
 
-    getName(): string {
-        return this.name;
-    }
-
-    getWalking(): boolean {
-        return this.walking;
-    }
-
-    getSpeed(): number {
-        return this.playerSpeed;
+        if(!this.walking) {
+            this.changeAnimation(this.animations.forwardAnimation, reverse);
+        }
+        else{
+            this.changeAnimation(this.animations.idleAnimation);
+        }
     }
 }
