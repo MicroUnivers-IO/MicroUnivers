@@ -12,8 +12,6 @@ const app = new Application({
 	backgroundColor: 0x000000
 });
 
-let currentWidth: number = window.innerWidth;
-let currentHeight: number = window.innerHeight;
 let cappedFPS:number = 120;
 let timer: number = 0;
 let player: Player;
@@ -21,14 +19,9 @@ let directions: boolean[] = [false, false, false, false];
 let map:GameMap;
 
 function resizeHandler(): void {
-	let offsetW:number = currentWidth - window.innerWidth;
-	let offsetH:number = currentHeight - window.innerHeight;
+	app.renderer.resize(window.innerWidth, window.innerHeight);
 
-	map.position.set(map.x - (offsetW / 2), map.y - (offsetH / 2));	
-	player.position.set(window.innerWidth/2, window.innerHeight/2);
-
-	currentWidth = window.innerWidth;
-	currentHeight = window.innerHeight;
+	map.position.set(app.screen.width / 2, app.screen.height / 2);
 }
 
 function move(): void {
@@ -38,12 +31,9 @@ function move(): void {
 	
 	let movementVector:number[] = moveEntity(directions, 6);
 
-	app.stage.removeChild(player);
-	player.manageWalk(directions[2]);
-	app.stage.addChild(player);
-
-	map.position.x += movementVector[0];
-	map.position.y += movementVector[1]; 
+	player.position.x -= movementVector[0];
+	player.position.y -= movementVector[1]; 
+	map.pivot.copyFrom(player.position);
 
 	timer = timeNow;
 }
@@ -76,15 +66,19 @@ function loadResources(): void {
 
 function initApp():void {
 	player = new Player("José", app.loader.resources["playerSpritesheet"].spritesheet!);
+	let player2 = new Player("je t'ai bien eu raph :)", app.loader.resources["playerSpritesheet"].spritesheet!);
 
 	map = new GameMap();
 	map.generateView();
 
-	player.position.set(window.innerWidth/2, window.innerHeight/2);
-	map.position.set(0, 0);
+	player.position.set(500, 500);
+	player2.position.set(505, 505);
+	map.position.set(window.innerWidth/2, window.innerHeight/2);
 
 	app.stage.addChild(map);
-	app.stage.addChild(player);
+	map.addChild(player);
+	map.addChild(player2);
+	map.pivot.copyFrom(player.position);
 
 	app.ticker.add(move);
 }
