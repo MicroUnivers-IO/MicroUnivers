@@ -1,4 +1,4 @@
-const tickLengthMs = 1000;
+const tickLengthMs = 20;
 
 let previousTick = Date.now();
 let actualTicks = 0;

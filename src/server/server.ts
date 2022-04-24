@@ -11,5 +11,4 @@ const app = uWS.App().listen(port, success => {
         console.log(`Erreur dans le lancement dans la socket sur le port : ${port}`);
 });
 
-lobbies.push(new Lobby(app, "/dev1"));
-lobbies.push(new Lobby(app, "/dev2"));
+lobbies.push(new Lobby(app, "/dev1").launch());

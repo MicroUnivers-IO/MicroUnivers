@@ -1,14 +1,15 @@
+import { randomUUID } from "crypto";
 import uWS from "uWebSockets.js";
 import { PLAYER_EVENTS } from "../../lib/enums/player_events";
 import { PROTOCOLS } from "../../lib/enums/protocols";
+import { Player } from "../../lib/types/Player";
 import { Lobby } from "../Lobby";
+import { State } from "../State";
 
 const decoder = new TextDecoder('utf-8');
+let number = 0;
 
-export const messageHandler = (ws: uWS.WebSocket, msg: ArrayBuffer, isBinary: boolean, lobby: Lobby) => {
-    console.log(ws.id + " : message received : " + decoder.decode(msg));
-
-
+export const messageHandler = (ws: uWS.WebSocket, msg: ArrayBuffer, isBinary: boolean, state: State) => {
     let receivedMSG;
     
     try { receivedMSG = JSON.parse(decoder.decode(msg)); } 
@@ -19,11 +20,10 @@ export const messageHandler = (ws: uWS.WebSocket, msg: ArrayBuffer, isBinary: bo
     switch(receivedMSG.type){
         case PROTOCOLS.CLI_HANDSHAKE:
             console.log("Client Handshake !");
-            onHandshake(ws, receivedMSG, lobby);
+            onHandshake(ws, receivedMSG, state);
             break;
         case PROTOCOLS.CLI_UPDATE:
-            console.log("Client Update !");
-            onUpdate(ws, receivedMSG, lobby);
+            onUpdate(ws, receivedMSG, state);
             break;
         default:
             return console.log("received message can be handled");
@@ -31,35 +31,31 @@ export const messageHandler = (ws: uWS.WebSocket, msg: ArrayBuffer, isBinary: bo
 };
 
 
-function onHandshake(ws: uWS.WebSocket, msg: any, lobby: Lobby){
-    lobby.getState().removeFromQueue(ws, false);
-    lobby.getState().addPlayer(ws, { name: msg.name });
+function onHandshake(ws: uWS.WebSocket, msg: any, state: State){
+    const p: Player = {
+        socket: ws,
+        id: randomUUID(), //tracker dont mind
+        username: "jose" + number++, //get from db
+        x: 0, 
+        y: 0,
+        speed: 1,
+    };
+    
+    state.addPlayer(ws, p);
 
-    ws.subscribe(PROTOCOLS.UPDATE + lobby.getUrl());
-}
-
-function onUpdate(ws: uWS.WebSocket, msg: any, lobby: Lobby){
-    if(!ws.authenticated) return console.log("unauthenticated user can't update");
-    if(!msg.event) return console.log("no event properties defined");
-
-    switch(msg.event){
-        case PLAYER_EVENTS.MOVE_EAST:
-            console.log("player want to move east !", ws);
-            break;
-        case PLAYER_EVENTS.MOVE_NORTH:
-            console.log("player want to move north !");
-            break;
-        case PLAYER_EVENTS.MOVE_SOUTH:
-            console.log("player want to move south !");
-            break;
-        case PLAYER_EVENTS.MOVE_WEST:
-            console.log("player want to move west !");
-            break;
-        case PLAYER_EVENTS.ATTACK:
-            console.log("player want to attack !");
-            break;
-        default:
-            return console.log("received message can be handled");
+    let initMSG = {
+        type: PROTOCOLS.INIT_PLAYER,
+        player: p
     }
 
+    ws.send(JSON.stringify(initMSG));
+    ws.subscribe(PROTOCOLS.UPDATE + state.getURL());
+}
+
+function onUpdate(ws: uWS.WebSocket, msg: any, state: State){
+    if(!ws.authenticated) return console.log("unauthenticated user can't update");
+    if(!msg.player) return console.log("no player properties defined");
+
+    let updatedPlayer: Player = msg.player;
+    state.updatePlayer(ws, updatedPlayer);
 }

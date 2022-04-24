@@ -9,16 +9,13 @@ import { State } from "./State";
 
 export class Lobby{
 
-    private readonly lobbyURL: string;
-
     private app: uWS.TemplatedApp;
     private state: State;
 
     constructor(app:uWS.TemplatedApp, URL: string){
         this.app = app;
-        this.lobbyURL = URL;
 
-        this.state = new State();
+        this.state = new State(URL);
 
         this.app.ws(URL, {
             // config
@@ -32,7 +29,7 @@ export class Lobby{
             },
         
             message: (ws, msg, isBinary) => {
-                messageHandler(ws, msg, isBinary, this);
+                messageHandler(ws, msg, isBinary, this.state);
             },
         
             close: (ws, code, msg) => {
@@ -40,24 +37,17 @@ export class Lobby{
             }
         
         });
+    }
 
-        setInterval(() => {
-            app.publish(PROTOCOLS.UPDATE + this.lobbyURL, JSON.stringify({ msg: this.lobbyURL + "   --   " + JSON.stringify(this.state.getPlayers()) }));
-        }, 2000)
+    launch(){
+        serverLoop(() =>{
+            let updateMSG = {
+                type: PROTOCOLS.UPDATE + this.state.getURL(),
+                players: this.state.getPlayers()
+            }
+            this.app.publish(PROTOCOLS.UPDATE + this.state.getURL(), JSON.stringify(updateMSG));
+        })
         
-        // serverLoop(() => {
-        //     app.publish(PROTOCOLS.UPDATE + lobbyURL, JSON.stringify(this.state.getPlayers()))
-
-        // });
+        return this; //chaining 😎
     }
-
-
-    getUrl() {
-        return this.lobbyURL;
-    }
-
-    getState() {
-        return this.state;
-    }
-
 }

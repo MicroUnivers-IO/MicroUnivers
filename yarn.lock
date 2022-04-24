@@ -1711,6 +1711,7 @@
     "querystring" "0.2.0"
 
 "uWebSockets.js@uNetworking/uWebSockets.js#v20.3.0":
+  "integrity" "sha512-l90dPmLHGNsJLvH7ElWWZP94KztU/Sm21vSVMbAt++UDNooAtueBpNajZP5h42yS3lo1/eCJxm+G0ieouiInJw=="
   "resolved" "git+ssh://git@github.com/uNetworking/uWebSockets.js.git#e5d6241a7bbfb0d9258780dbf6175ae34d6f18e9"
   "version" "20.3.0"
 

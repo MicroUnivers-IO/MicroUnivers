@@ -1,47 +1,42 @@
-import { Iplayer } from "../lib/types/Iplayer";
+import { Player } from "../lib/types/Player";
 import uWS from "uWebSockets.js";
+import { workerData } from "worker_threads";
 
 export class State{
-    private queue: uWS.WebSocket[];
-    private players: Iplayer[];
     
-    constructor(){
-        this.queue = [];
-        this.players = [];
+    private URL: string;
+    private players: any;
+    
+    constructor(URL: string){
+        this.URL = URL;
+        this.players = {};
     }
 
-    public toQueue(ws: uWS.WebSocket){
-        ws.authenticated = false;
-        this.queue.push(ws);
-        console.log("added to queue");
-
-    }
-
-    public removeFromQueue(ws: uWS.WebSocket, closeSocket: boolean){
-        this.queue = this.queue.filter((val) => {return val.id != ws.id});
-        if(closeSocket) ws.close();
-    }
-
-    public addPlayer(ws: uWS.WebSocket, options: any){
-
-        const p: Iplayer ={
-            socket: ws,
-            username: options.username, //get from db
-            x: 0, //default
-            y: 0 //default
-        };
-
+    public addPlayer(ws: uWS.WebSocket, player: Player){
         ws.authenticated = true; // communication avec la bdd --> dans OPTIONS il y aura un JWT
 
-        this.players.push(p);
-        // si la connexion marche pas removeFromQueue(ws);
+        this.players[ws.id] = player;
+        // si la connexion marche pas removeFromQueue(ws); stefan : "pas besoin si on utilise un dict"
     }
 
-    public removePlayer(ws: uWS.WebSocket): void{
-        this.players = this.players.filter((val) => { return val.socket.id != ws.id; });
+    public updatePlayer(ws: uWS.WebSocket, player: Player){
+        this.players[ws.id] = player;
+    }
+
+    public deletePlayer(ws: uWS.WebSocket){
+        delete this.players[ws.id];
     }
 
     public getPlayers(){
-        return this.players;
+        let p = [];
+        for(let key in this.players){
+
+            p.push(this.players[key]);
+        }
+        return p;
+    }
+
+    public getURL(){
+        return this.URL;
     }
 }
