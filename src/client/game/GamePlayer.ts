@@ -54,8 +54,8 @@ export class GamePlayer extends Container {
         this.player.x += horizontal;
         this.player.y -= vertical;
 
-        this.position.x += horizontal;
-        this.position.y -= vertical; 
+        this.position.x = this.player.x;
+        this.position.y = this.player.y; 
     }
 
     updateOther(){

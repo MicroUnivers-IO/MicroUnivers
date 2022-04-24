@@ -16,8 +16,6 @@ export class GameApp{
     private static west: boolean  = false;
     private static east: boolean  = false;
 
-    private static number = 0;
-
     static init(URL: string){
         GameApp.app = new Application({
             view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
@@ -33,9 +31,8 @@ export class GameApp{
         GameApp.app.loader.load((loader, resources) => {
             GameApp.map = new GameMap();
             GameApp.app.stage.addChild(GameApp.map);
-            GameApp.app.ticker.add(GameApp.gameLoop);
-            
             GameSocket.init(URL);
+            GameApp.app.ticker.add(GameApp.gameLoop);
         });
         
     }
