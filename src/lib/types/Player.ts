@@ -7,4 +7,5 @@ export interface Player{
     x: number;
     y: number;
     speed: number;
+    action: string;
 }

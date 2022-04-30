@@ -7,14 +7,15 @@ import { GameSocket } from "./GameSocket";
 export class GameApp{
     private static app: Application;
 
-    private static map: GameMap;
-    private static players: GamePlayer[] = [];
-    private static mainPlayer: GamePlayer;
+    static map: GameMap;
+    static players: GamePlayer[] = [];
+    static mainPlayer: GamePlayer;
 
-    private static north: boolean = false;
-    private static south: boolean = false;
-    private static west: boolean  = false;
-    private static east: boolean  = false;
+    static north: boolean = false;
+    static south: boolean = false;
+    static west: boolean  = false;
+    static east: boolean  = false;
+    static attack: boolean = false;
 
     static init(URL: string){
         GameApp.app = new Application({
@@ -25,7 +26,7 @@ export class GameApp{
             backgroundColor: 0x000000
         });
 
-        GameApp.app.loader.add("playerSpritesheet", "assets/player/player.json");
+        GameApp.app.loader.add("playerSpritesheet", "assets/player/sheet.json");
         GameApp.app.loader.add("assets/tileset/field_01.png");
 
         GameApp.app.loader.load((loader, resources) => {
@@ -60,16 +61,19 @@ export class GameApp{
         }
     }
 
+    static mouseClickHandler(event: MouseEvent){
+        GameApp.attack = true;
+    }
+
     static gameLoop(){
         if(GameApp.mainPlayer){
-            GameApp.mainPlayer.updateMain(GameApp.north, GameApp.south, GameApp.west, GameApp.east);
+            GameApp.mainPlayer.updateMain(GameApp.north, GameApp.south, GameApp.west, GameApp.east, GameApp.attack);
+            if(GameApp.attack) GameApp.attack = false;
             GameApp.map.pivot.copyFrom(GameApp.mainPlayer.position);
             GameSocket.sendUpdate(GameApp.mainPlayer.player);
         } 
         
         GameApp.players.forEach(p => p.updateOther());
-
-        
     }
 
     static update(players: Player[]){

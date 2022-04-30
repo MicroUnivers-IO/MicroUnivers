@@ -35,10 +35,11 @@ function onHandshake(ws: uWS.WebSocket, msg: any, state: State){
     const p: Player = {
         socket: ws,
         id: randomUUID(), //tracker dont mind
-        username: "jose" + number++, //get from db
+        username: "josdsssssssssssse" + number++, //get from db
         x: 0, 
         y: 0,
         speed: 1,
+        action: "idle_down",
     };
     
     state.addPlayer(ws, p);

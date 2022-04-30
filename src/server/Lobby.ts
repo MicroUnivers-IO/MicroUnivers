@@ -46,7 +46,7 @@ export class Lobby{
                 players: this.state.getPlayers()
             }
             this.app.publish(PROTOCOLS.UPDATE + this.state.getURL(), JSON.stringify(updateMSG));
-        })
+        });
         
         return this; //chaining 😎
     }
