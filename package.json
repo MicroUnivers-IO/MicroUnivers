@@ -5,7 +5,8 @@
   "main": "src/server/server",
   "scripts": {
     "client": "node ./scripts/client.js",
-    "serv": "start nodemon ./dist/server.js --watch dist && node ./scripts/serv.js --serve"
+    "serv": "start nodemon ./dist/server.js --watch dist && node ./scripts/serv.js --serve",
+    "prod": "esbuild ./src/server/server.ts --bundle --platform=node --outdir=dist && esbuild ./src/client/app.ts --bundle --platform=node --outfile=src/client/static/bundle-microunivers.js && node ./dist/server.js"
   },
   "repository": {
     "type": "git",
