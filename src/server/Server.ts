@@ -1,14 +1,8 @@
-import uWS from "uWebSockets.js";
-import { Lobby } from "./Lobby";
+import { GameServer } from "./GameServer";
 
-const port = 7777;
+let gameServer = new GameServer("GameServer_Dev", 7777 /*,{
+    certPath: "",
+    keyPath: "",
+}*/);
 
-const lobbies: Lobby[] = [];
-
-const app = uWS.App().listen(port, success => {
-    success ?
-        console.log(`Le serveur de socket écoute sur le port : ${port}`) :
-        console.log(`Erreur dans le lancement dans la socket sur le port : ${port}`);
-});
-
-lobbies.push(new Lobby(app, "/dev1").launch());
+gameServer.createServ("/dev1");

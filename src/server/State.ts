@@ -1,6 +1,5 @@
 import { Player } from "../lib/types/Player";
 import uWS from "uWebSockets.js";
-import { workerData } from "worker_threads";
 
 export class State{
     
@@ -33,7 +32,7 @@ export class State{
 
             p.push(this.players[key]);
         }
-        return p;
+        return p; 
     }
 
     public getURL(){
