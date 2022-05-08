@@ -7,8 +7,8 @@ require("esbuild").build({
     platform: 'node',
     watch: {
         onRebuild(error, result) {
-          if (error) console.error('rebuild failed')
-          else console.log('rebuildbuild succeeded:')
+          if (error) console.error('> Rebuild failed :(')
+          else console.log('> Rebuild succeeded !')
         },
     },
 }).then((result) => {
@@ -18,9 +18,9 @@ require("esbuild").build({
         fs.copyFileSync("./node_modules/uWebSockets.js/" + uws_target, "./dist/" + uws_target, fs.constants.COPYFILE_EXCL);
     }catch(e){}
     
-    console.log("Server build success !!");
+    console.log("> Server build success !");
 }).catch((error) => {
-    console.log("build failed : " + error);
+    console.log("> Build failed :(");
     process.exit(1);
 });
 
