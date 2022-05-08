@@ -1,9 +1,9 @@
 const fs = require("fs");
 
 require("esbuild").build({
-    entryPoints: ["./src/server/server.ts"],
+    entryPoints: ["./src/server/Server.ts"],
     bundle: true,
-    outdir: "./dist",
+    outfile: "./dist/Server.js",
     platform: 'node',
     watch: {
         onRebuild(error, result) {
