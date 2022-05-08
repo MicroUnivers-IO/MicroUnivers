@@ -2,6 +2,7 @@ require('esbuild').build({
     entryPoints: ['./src/client/app.ts'],
     bundle: true,
     outfile: './src/client/static/bundle-microunivers.js',
+    platform: "browser",
     watch: {
         onRebuild(error, result) {
             if (error) console.error('> Rebuild failed :(', error)
