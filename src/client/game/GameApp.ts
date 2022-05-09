@@ -1,3 +1,5 @@
+import { makeNoise2D } from "fast-simplex-noise";
+import { makeRectangle } from "fractal-noise";
 import { Application, Spritesheet } from "pixi.js";
 import { Player } from "../../lib/types/Player";
 import { GameMap } from "./GameMap";
@@ -16,6 +18,8 @@ export class GameApp{
     static west: boolean  = false;
     static east: boolean  = false;
     static attack: boolean = false;
+    static x = document.getElementById("x");  
+    static y = document.getElementById("y");
 
     static init(URL: string){
         GameApp.app = new Application({
@@ -27,11 +31,10 @@ export class GameApp{
         });
 
         GameApp.app.loader.add("playerSpritesheet", "assets/player/sheet.json");
-        GameApp.app.loader.add("assets/tileset/field_01.png");
+        GameApp.app.loader.add("tileSet", "assets/tileset/texture.json");
+
 
         GameApp.app.loader.load((loader, resources) => {
-            GameApp.map = new GameMap();
-            GameApp.app.stage.addChild(GameApp.map);
             GameSocket.init(URL);
             GameApp.app.ticker.add(GameApp.gameLoop);
         });
@@ -42,6 +45,11 @@ export class GameApp{
         GameApp.mainPlayer = new GamePlayer(player, GameApp.app.loader.resources["playerSpritesheet"].spritesheet as Spritesheet);
         GameApp.map.addChild(GameApp.mainPlayer);
         GameApp.map.pivot.copyFrom(GameApp.mainPlayer.position);
+    }
+
+    static setMap(mapNoise: number[][]){
+        GameApp.map = new GameMap(GameApp.app.loader.resources["tileSet"].spritesheet as Spritesheet, mapNoise);
+        GameApp.app.stage.addChild(GameApp.map);
     }
 
     static resizeHandler(): void {
@@ -66,7 +74,7 @@ export class GameApp{
     }
 
     static gameLoop(){
-        if(GameApp.mainPlayer){
+        if(GameApp.mainPlayer && GameApp.map){
             GameApp.mainPlayer.updateMain(GameApp.north, GameApp.south, GameApp.west, GameApp.east, GameApp.attack);
             if(GameApp.attack) GameApp.attack = false;
             GameApp.map.pivot.copyFrom(GameApp.mainPlayer.position);

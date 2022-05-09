@@ -39,12 +39,13 @@ function onHandshake(ws: uWS.WebSocket, msg: any, state: State){
         speed: 1,
         action: "idle_down",
     };
-    
+
     state.addPlayer(ws, p);
 
     let initMSG = {
         type: PROTOCOLS.INIT_PLAYER,
-        player: p
+        player: p,
+        map: state.getMapNoise()
     }
 
     ws.send(JSON.stringify(initMSG));

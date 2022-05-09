@@ -18,7 +18,6 @@ export class GamePlayer extends Container {
         this.pastDirection = "down";
         this.player = player;
         this.playerSheet = spriteSheet;
-        this.position.set(player.x, player.y);
 
         let texture = spriteSheet.animations["idle_down"];
 
@@ -39,6 +38,8 @@ export class GamePlayer extends Container {
         this.currentSprite.y = -14;
         this.nameSprite.x = 0;
         this.nameSprite.y = 0;
+
+        this.position.set(player.x - this.width / 2, player.y - this.height / 2);
     }
 
     updateMain(up: boolean, down: boolean, left: boolean, right: boolean, attack: boolean){
@@ -112,8 +113,7 @@ export class GamePlayer extends Container {
         this.player.x += horizontal;
         this.player.y -= vertical;
 
-        this.position.x = this.player.x;
-        this.position.y = this.player.y; 
+        this.position.set(this.player.x - this.width / 2, this.player.y - this.height / 2)
     }
 
     updateOther(){
@@ -122,6 +122,6 @@ export class GamePlayer extends Container {
             this.currentSprite.play();
         }
 
-        this.position.set(this.player.x, this.player.y);
+        this.position.set(this.player.x - this.width / 2, this.player.y - this.height / 2);
     }
 }

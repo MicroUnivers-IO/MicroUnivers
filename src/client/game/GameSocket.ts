@@ -29,9 +29,14 @@ export class GameSocket{
                 default: console.log("unhandled message");
             }
         }
+
+        GameSocket.ws.onclose = () =>{
+            
+        }
     }
 
     static initPlayer(msg: any){
+        GameApp.setMap(msg.map);
         GameApp.setMainPlayer(msg.player as Player);
     }
     
