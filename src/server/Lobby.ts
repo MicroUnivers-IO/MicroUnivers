@@ -3,8 +3,8 @@ import { PROTOCOLS } from "../lib/enums/protocols";
 import { closeHandler } from "./handlers/closeHandler";
 import { messageHandler } from "./handlers/messageHandler";
 import { openHandler } from "./handlers/openHandler";
-import { serverLoop } from "./loop";
 import { State } from "./State";
+import { Loop } from "./Loop";
 
 
 export class Lobby {
@@ -12,6 +12,8 @@ export class Lobby {
     private app: uWS.TemplatedApp;
     private state: State;
     private PROTOCOLS_ENUM: any;
+    private loop: Loop;
+
 
     constructor(app: uWS.TemplatedApp, URL: string) {
 
@@ -42,19 +44,23 @@ export class Lobby {
             }
 
         });
-
     }
 
-    launch() {
 
-        serverLoop(() => {
+    launch(tickInterval: number) { // By default 20tick/s
+        this.loop = new Loop(tickInterval, () => {
             let updateMSG = {
                 type: this.PROTOCOLS_ENUM.UPDATE,
                 players: this.state.getPlayers()
             }
             this.app.publish(this.PROTOCOLS_ENUM.UPDATE, JSON.stringify(updateMSG));
-        });
-
+        }).start();
+        
         return this; //chaining 😎
     }
+
+    public getUrl() {
+        return this.state.getURL();
+    }
+
 }

@@ -5,4 +5,5 @@ let gameServer = new GameServer("GameServer_Dev", 7777 /*,{
     keyPath: "",
 }*/);
 
-gameServer.createServ("/dev1");
+gameServer.createLobby("/dev1", 50);
+//gameServer.createLobby("/dev2", 50);

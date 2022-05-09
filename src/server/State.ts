@@ -1,6 +1,5 @@
-import { Player } from "../lib/types/Player";
 import uWS from "uWebSockets.js";
-import { workerData } from "worker_threads";
+import { Player } from "../lib/types/Player";
 import { makeNoise2D } from "fast-simplex-noise";
 import { makeRectangle } from "fractal-noise";
 

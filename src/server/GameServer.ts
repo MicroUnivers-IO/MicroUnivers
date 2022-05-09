@@ -39,8 +39,17 @@ export class GameServer {
         });
     }
 
-    public createServ(url: string = randomUUID()) {
-        this.lobbies.push(new Lobby(this.socketApp, url).launch());
+    public createLobby(url: string = randomUUID(), tickInterval:number = 50) {
+        let lobby = new Lobby(this.socketApp, url).launch(tickInterval);
+        this.lobbies.push(lobby);
+        return lobby;
+    }
+
+    public getLobby(url: string) {
+        for(let i = 0; i < this.lobbies.length; ++i)
+            if(this.lobbies[i].getUrl() == url) return this.lobbies[i]
+
+        return null;
     }
 
 }
