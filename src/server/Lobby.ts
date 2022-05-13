@@ -12,7 +12,6 @@ export class Lobby {
     private app: uWS.TemplatedApp;
     private state: State;
     private PROTOCOLS_ENUM: any;
-    private loop: Loop;
 
 
     constructor(app: uWS.TemplatedApp, URL: string) {
@@ -21,7 +20,7 @@ export class Lobby {
         this.state = new State(URL);
 
         this.PROTOCOLS_ENUM = Object.freeze({
-            UPDATE: PROTOCOLS.UPDATE + this.state.getURL()
+            UPDATE: PROTOCOLS.UPDATE + this.state.URL
         });
 
         this.app.ws(URL, {
@@ -44,11 +43,12 @@ export class Lobby {
             }
 
         });
+
     }
 
 
-    launch(tickInterval: number) { // By default 20tick/s
-        this.loop = new Loop(tickInterval, () => {
+    launch(tickInterval: number) {
+        new Loop(tickInterval, () => {
             let updateMSG = {
                 type: this.PROTOCOLS_ENUM.UPDATE,
                 players: this.state.getPlayers()
@@ -59,8 +59,15 @@ export class Lobby {
         return this; //chaining 😎
     }
 
-    public getUrl() {
-        return this.state.getURL();
+    overview() {
+        return {
+            url: this.state.URL,
+            nbPlayer: this.state.players.length
+        }
+    }
+
+    getURL() {
+        return this.state.URL;
     }
 
 }

@@ -6,4 +6,3 @@ let gameServer = new GameServer("GameServer_Dev", 7777 /*,{
 }*/);
 
 gameServer.createLobby("/dev1", 50);
-//gameServer.createLobby("/dev2", 50);

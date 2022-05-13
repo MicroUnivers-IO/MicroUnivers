@@ -15,6 +15,7 @@ export class GameServer {
     private port: number;
     private servName: string;
     private lobbies: Lobby[];
+    public isSSL: boolean;
 
     constructor(servName: string, port: number, SSLOpts?: SSLOpts) {
         this.servName = servName;
@@ -23,9 +24,10 @@ export class GameServer {
         
         if (!SSLOpts) {
             // Init without ssl
+            this.isSSL = false;
             this.socketApp = uWS.App();
         } else {
-            console.log(SSLOpts)
+            this.isSSL = true;
             this.socketApp = uWS.SSLApp({
                 cert_file_name: SSLOpts.certPath,
                 key_file_name: SSLOpts.keyPath
@@ -39,15 +41,16 @@ export class GameServer {
         });
     }
 
-    public createLobby(url: string = randomUUID(), tickInterval:number = 50) {
+    public createLobby(url: string = randomUUID(), tickInterval:number = 50) {  // By default 20 tick/s
         let lobby = new Lobby(this.socketApp, url).launch(tickInterval);
         this.lobbies.push(lobby);
         return lobby;
     }
 
+
     public getLobby(url: string) {
         for(let i = 0; i < this.lobbies.length; ++i)
-            if(this.lobbies[i].getUrl() == url) return this.lobbies[i]
+            if(this.lobbies[i].getURL() == url) return this.lobbies[i]
 
         return null;
     }
