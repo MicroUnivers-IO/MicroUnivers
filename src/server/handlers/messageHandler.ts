@@ -45,11 +45,11 @@ function onHandshake(ws: uWS.WebSocket, msg: any, state: State){
     let initMSG = {
         type: PROTOCOLS.INIT_PLAYER,
         player: p,
-        map: state.getMapNoise()
+        map: state.mapNoise
     }
 
     ws.send(JSON.stringify(initMSG));
-    ws.subscribe(PROTOCOLS.UPDATE + state.getURL());
+    ws.subscribe(PROTOCOLS.UPDATE + state.URL);
 }
 
 function onUpdate(ws: uWS.WebSocket, msg: any, state: State){
