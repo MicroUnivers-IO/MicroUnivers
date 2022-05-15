@@ -1,10 +1,10 @@
 import uWS from "uWebSockets.js";
-import { PROTOCOLS } from "../lib/enums/protocols";
+import { PROTOCOLS } from "../../lib/enums/protocols";
 import { closeHandler } from "./handlers/closeHandler";
 import { messageHandler } from "./handlers/messageHandler";
-import { openHandler } from "./handlers/openHandler";
+import { openHandler } from "./handlers/openHandler"; 
 import { State } from "./State";
-import { Loop } from "./Loop";
+import { Loop } from "../../lib/Loop";
 
 
 export class Lobby {
@@ -49,11 +49,11 @@ export class Lobby {
 
     launch(tickInterval: number) {
         new Loop(tickInterval, () => {
-            let updateMSG = {
+            this.app.publish(this.PROTOCOLS_ENUM.UPDATE, JSON.stringify({
                 type: this.PROTOCOLS_ENUM.UPDATE,
-                players: this.state.getPlayers()
-            }
-            this.app.publish(this.PROTOCOLS_ENUM.UPDATE, JSON.stringify(updateMSG));
+                players: this.state.getPlayers(),
+                t: Date.now()
+            }));
         }).start();
         
         return this; //chaining 😎

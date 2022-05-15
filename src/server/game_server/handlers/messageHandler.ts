@@ -1,7 +1,7 @@
 import uWS from "uWebSockets.js";
 import { randomUUID } from "crypto";
-import { PROTOCOLS } from "../../lib/enums/protocols";
-import { Player } from "../../lib/types/Player";
+import { PROTOCOLS } from "../../../lib/enums/protocols";
+import { Player } from "../../../lib/types/Player";
 import { State } from "../State";
 
 const decoder = new TextDecoder('utf-8');
@@ -34,9 +34,9 @@ function onHandshake(ws: uWS.WebSocket, msg: any, state: State){
         socket: ws,
         id: randomUUID(), //tracker dont mind
         username: "José_" + number++, //get from db
-        x: 0, 
-        y: 0,
-        speed: 1,
+        x: 1500, 
+        y: 1500,
+        speed: 5,
         action: "idle_down",
     };
 

@@ -1,7 +1,7 @@
 import { GameApp } from "./game/GameApp";
 
 
-GameApp.init("/dev1");
+GameApp.init(7777, "/dev1");
 
 window.addEventListener("resize", () => GameApp.resizeHandler());
 window.addEventListener("keydown", e => GameApp.keyPressHandler(e, true));

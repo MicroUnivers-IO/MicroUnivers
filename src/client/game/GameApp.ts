@@ -1,27 +1,27 @@
-import { makeNoise2D } from "fast-simplex-noise";
-import { makeRectangle } from "fractal-noise";
 import { Application, Spritesheet } from "pixi.js";
 import { Player } from "../../lib/types/Player";
 import { GameMap } from "./GameMap";
 import { GamePlayer } from "./GamePlayer";
 import { GameSocket } from "./GameSocket";
+import { GameState } from "./GameState";
 
-export class GameApp{
+export class GameApp {
     private static app: Application;
 
-    static map: GameMap;
-    static players: GamePlayer[] = [];
-    static mainPlayer: GamePlayer;
+    public static map: GameMap;
+    public static players: GamePlayer[] = [];
+    public static mainPlayer: GamePlayer;
+    public static state: GameState;
 
     static north: boolean = false;
     static south: boolean = false;
-    static west: boolean  = false;
-    static east: boolean  = false;
+    static west: boolean = false;
+    static east: boolean = false;
     static attack: boolean = false;
-    static x = document.getElementById("x");  
+    static x = document.getElementById("x");
     static y = document.getElementById("y");
 
-    static init(URL: string){
+    static init(PORT:number, URL:string) {
         GameApp.app = new Application({
             view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
             resolution: window.devicePixelRatio || 1,
@@ -35,19 +35,19 @@ export class GameApp{
 
 
         GameApp.app.loader.load((loader, resources) => {
-            GameSocket.init(URL);
+            GameSocket.init(PORT, URL);
             GameApp.app.ticker.add(GameApp.gameLoop);
         });
         
     }
 
-    static setMainPlayer(player: Player){
+    static setMainPlayer(player: Player) {
         GameApp.mainPlayer = new GamePlayer(player, GameApp.app.loader.resources["playerSpritesheet"].spritesheet as Spritesheet);
         GameApp.map.addChild(GameApp.mainPlayer);
         GameApp.map.pivot.copyFrom(GameApp.mainPlayer.position);
     }
 
-    static setMap(mapNoise: number[][]){
+    static setMap(mapNoise: number[][]) {
         GameApp.map = new GameMap(GameApp.app.loader.resources["tileSet"].spritesheet as Spritesheet, mapNoise);
         GameApp.app.stage.addChild(GameApp.map);
     }
@@ -55,13 +55,13 @@ export class GameApp{
     static resizeHandler(): void {
         GameApp.app.renderer.resize(window.innerWidth, window.innerHeight);
 
-        if(GameApp.map) GameApp.map.position.set(this.app.screen.width / 2, this.app.screen.height / 2);
+        if (GameApp.map) GameApp.map.position.set(this.app.screen.width / 2, this.app.screen.height / 2);
     }
 
-    static keyPressHandler(event: KeyboardEvent, pressed: boolean){
-        if(!GameApp.mainPlayer) return;
+    static keyPressHandler(event: KeyboardEvent, pressed: boolean) {
+        if (!GameApp.mainPlayer) return;
 
-        switch(event.key){
+        switch (event.key) {
             case "w": GameApp.north = pressed; break;
             case "a": GameApp.west = pressed; break;
             case "s": GameApp.south = pressed; break;
@@ -69,60 +69,46 @@ export class GameApp{
         }
     }
 
-    static mouseClickHandler(event: MouseEvent){
+    static mouseClickHandler(event: MouseEvent) {
         GameApp.attack = true;
     }
 
-    static gameLoop(){
-        if(GameApp.mainPlayer && GameApp.map){
-            GameApp.mainPlayer.updateMain(GameApp.north, GameApp.south, GameApp.west, GameApp.east, GameApp.attack);
-            if(GameApp.attack) GameApp.attack = false;
-            GameApp.map.pivot.copyFrom(GameApp.mainPlayer.position);
-            GameSocket.sendUpdate(GameApp.mainPlayer.player);
-        } 
-        
-        GameApp.players.forEach(p => p.updateOther());
+    static gameLoop() {
+        if (GameApp.mainPlayer && GameApp.map) GameApp.render();
     }
 
-    static update(players: Player[]){
-        let state: any = {};
+    static addPlayer(p: Player, sp: Spritesheet) {
+        const np = new GamePlayer(p, GameApp.app.loader.resources["playerSpritesheet"].spritesheet as Spritesheet)
+        GameApp.players.push(np);
+        GameApp.map.addChild(np);
+    }
 
-        for(let i = 0; i < players.length; i++){
-            
-            if(players[i].id === GameApp.mainPlayer.player.id){              
-                GameApp.mainPlayer.player = players[i];
-                continue;
-            }
+    static render() {
 
-            let identified = false;
+        const state: any = GameState.getCurrentState();
+        
+        //GameApp.mainPlayer.updateMain2(GameApp.north, GameApp.south, GameApp.west, GameApp.east, GameApp.attack, state.me.x, state.me.y);
+        GameApp.mainPlayer.updateMain(GameApp.north, GameApp.south, GameApp.west, GameApp.east, GameApp.attack);
 
-            for(let y = 0; y < GameApp.players.length; y++){
-                if(players[i].id === GameApp.players[y].player.id){
-                    GameApp.players[y].player = players[i];
-                    state[GameApp.players[y].player.id] = true;
-                    identified = true;
+        let newP;
+        for (let i = 0; i < state.players.length; ++i) {
+            newP = true;
+            for (let j = 0; j < this.players.length; ++j) {
+                if (GameApp.players[j].player.id == state.players[i].id) {
+                    GameApp.players[j].updateOther(state.players[i].x, state.players[i].y, state.players[i].action);
+                    newP = false;
                     break;
                 }
             }
-
-            //not identified -> create new player (freshly connected)
-            if(!identified){                
-                let newPlayer = new GamePlayer(players[i], GameApp.app.loader.resources["playerSpritesheet"].spritesheet as Spritesheet)
-                GameApp.players.push(newPlayer);
-                GameApp.map.addChild(newPlayer);
-                state[players[i].id] = true;
+            if (newP) {
+                GameApp.addPlayer(state.players[i] as Player, GameApp.app.loader.resources["playerSpritesheet"].spritesheet as Spritesheet)
             }
             
         }
 
-        //clear players list (dead / deconnected etc...)
-        GameApp.players = GameApp.players.filter(p => {            
-            if(!state[p.player.id]){
-                GameApp.map.removeChild(p);
-                p.destroy();
-                return false;
-            }
-            return true;
-        });
+        GameApp.map.pivot.copyFrom(GameApp.mainPlayer.position);
+        if (GameApp.attack) GameApp.attack = false;
+
+        GameSocket.sendUpdate(GameApp.mainPlayer.player);
     }
 }

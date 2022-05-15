@@ -1,7 +1,5 @@
-import { Container, AnimatedSprite, Text, Spritesheet, Sprite } from 'pixi.js';
-import { PLAYER_EVENTS } from '../../lib/enums/player_events';
+import { Container, AnimatedSprite, Text, Spritesheet } from 'pixi.js';
 import { Player } from '../../lib/types/Player';
-import { GameApp } from './GameApp';
 
 export class GamePlayer extends Container {
 
@@ -116,12 +114,23 @@ export class GamePlayer extends Container {
         this.position.set(this.player.x - this.width / 2, this.player.y - this.height / 2)
     }
 
-    updateOther(){
+    // WORK IN PROGRESS
+    /*updateMain2(up: boolean, down: boolean, left: boolean, right: boolean, attack: boolean, x:number, y:number) {
+        this.updateMain(up, down, left, right, attack);
+        this.x = x;
+        this.y = y;
+    }*/
+
+    updateOther(x: number, y:number, action:string) {
+        this.player.x = x;
+        this.player.y = y;
+        this.player.action = action;
+
         if(!this.currentSprite.playing){
             this.currentSprite.textures = this.playerSheet.animations[this.player.action];
             this.currentSprite.play();
         }
-
         this.position.set(this.player.x - this.width / 2, this.player.y - this.height / 2);
     }
+
 }
