@@ -1,5 +1,7 @@
-import { Application, Spritesheet } from "pixi.js";
+import { Application, Sprite, Spritesheet, Texture } from "pixi.js";
+import { Entity } from "../../lib/types/Entity";
 import { Player } from "../../lib/types/Player";
+import { GameEntity } from "./GameEntity";
 import { GameMap } from "./GameMap";
 import { GamePlayer } from "./GamePlayer";
 import { GameSocket } from "./GameSocket";
@@ -9,7 +11,9 @@ export class GameApp {
     private static app: Application;
 
     public static map: GameMap;
+    public static collisionMatrix: number[][]; //no setter needed
     public static players: GamePlayer[] = [];
+    public static entitys: GameEntity[] = [];
     public static mainPlayer: GamePlayer;
     public static state: GameState;
 
@@ -18,8 +22,6 @@ export class GameApp {
     static west: boolean = false;
     static east: boolean = false;
     static attack: boolean = false;
-    static x = document.getElementById("x");
-    static y = document.getElementById("y");
 
     static init(PORT:number, URL:string) {
         GameApp.app = new Application({
@@ -32,11 +34,15 @@ export class GameApp {
 
         GameApp.app.loader.add("playerSpritesheet", "assets/player/sheet.json");
         GameApp.app.loader.add("tileSet", "assets/tileset/texture.json");
+        GameApp.app.loader.add("e", "assets/entity/entity.png");
+        GameApp.app.loader.add("test", "assets/player/vahed.json");
 
 
         GameApp.app.loader.load((loader, resources) => {
             GameSocket.init(PORT, URL);
             GameApp.app.ticker.add(GameApp.gameLoop);
+
+            GameApp.app.ticker.maxFPS = 60;
         });
         
     }
@@ -83,6 +89,12 @@ export class GameApp {
         GameApp.map.addChild(np);
     }
 
+    static addEntity(e: Entity){
+        let ne = new GameEntity(e, new Sprite(GameApp.app.loader.resources["e"].texture as Texture));
+        GameApp.entitys.push(ne);
+        GameApp.map.addChild(ne);
+    }
+
     static render() {
 
         const state: any = GameState.getCurrentState();
@@ -106,8 +118,26 @@ export class GameApp {
             
         }
 
+        let newE
+        for(let i = 0; i < state.entitys.length; i++){
+            newE = true;
+            for(let j = 0; j < GameApp.entitys.length; j++){
+                if(GameApp.entitys[j].entity.id == state.entitys[i].id){
+                
+                    GameApp.entitys[j].update(state.entitys[i]);
+                    newE = false;
+                    break;
+                }
+            }
+
+            if(newE) GameApp.addEntity(state.entitys[i] as Entity);
+        }
+
+
         GameApp.map.pivot.copyFrom(GameApp.mainPlayer.position);
         if (GameApp.attack) GameApp.attack = false;
+        
+
 
         GameSocket.sendUpdate(GameApp.mainPlayer.player);
     }

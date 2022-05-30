@@ -1,9 +1,10 @@
-import { BaseTexture, Container, Resource, Sprite, Spritesheet, Texture } from "pixi.js";
+import { BaseTexture, Container, Resource, Sprite, Spritesheet, Text, Texture } from "pixi.js";
 import { CompositeRectTileLayer, CompositeTilemap, Tilemap } from "@pixi/tilemap";
 import { makeNoise2D } from "fast-simplex-noise";
 import { makeRectangle, Noise2Fn } from 'fractal-noise';
 import { GameApp } from "./GameApp";
 import { ECDH } from "crypto";
+import { isHighGround, isLowGround } from "../../lib/common/condition";
 
 
 export class GameMap extends Container {
@@ -69,14 +70,19 @@ export class GameMap extends Container {
         this.position.set(window.innerWidth / 2, window.innerHeight / 2);
         this.tileSheet = tileSheet;
         this.noise = noise;
-        
+
         let ground = new CompositeTilemap();
         this.addChild(ground);
+
 
         for (let row = 0; row < GameMap.height; row++) {    
             for (let col = 0; col < GameMap.width; col++) {
                 let texture = this.getSprite(row, col);
                 ground.tile(texture, col * GameMap.tileSize, row * GameMap.tileSize);
+                
+                // let test = new Text(GameApp.collisionMatrix[row][col].toString());
+                // test.position.set(col * GameMap.tileSize, row * GameMap.tileSize);
+                // this.addChild(test);
             }
         }
     }
@@ -88,12 +94,12 @@ export class GameMap extends Container {
     private getSprite(row: number, col: number): Texture<Resource>{
         let condition;
         let threshold;
-        if(this.noise[row][col] > 0.5){
+        if(isHighGround(this.noise[row][col])){
             threshold = 0;
-            condition = (noiseValue: number) => {return noiseValue > 0.5};
-        } else if(this.noise[row][col] < -0.3){
+            condition = isHighGround;
+        } else if(isLowGround(this.noise[row][col])){
             threshold = 48;
-            condition = (noiseValue: number) => {return noiseValue < -0.3};
+            condition = isLowGround;
         } else return this.tileSheet.textures["tile041.png"];
 
         //cardinal 

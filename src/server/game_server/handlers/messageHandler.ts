@@ -36,7 +36,7 @@ function onHandshake(ws: uWS.WebSocket, msg: any, state: State){
         username: "José_" + number++, //get from db
         x: 1500, 
         y: 1500,
-        speed: 5,
+        speed: 10,
         action: "idle_down",
     };
 
@@ -45,7 +45,8 @@ function onHandshake(ws: uWS.WebSocket, msg: any, state: State){
     let initMSG = {
         type: PROTOCOLS.INIT_PLAYER,
         player: p,
-        map: state.mapNoise
+        map: state.mapNoise,
+        collisionMatrix: state.collisionMatrix
     }
 
     ws.send(JSON.stringify(initMSG));

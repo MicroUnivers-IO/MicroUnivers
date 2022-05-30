@@ -50,8 +50,10 @@ export class GameSocket {
     }
 
     static initPlayer(msg: any) {
+        GameApp.collisionMatrix = msg.collisionMatrix as number[][];
         GameApp.setMap(msg.map);
         GameApp.setMainPlayer(msg.player as Player);
+        
     }
 
     static sendUpdate(player: Player) {

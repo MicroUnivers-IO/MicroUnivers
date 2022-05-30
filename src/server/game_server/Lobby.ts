@@ -5,6 +5,8 @@ import { messageHandler } from "./handlers/messageHandler";
 import { openHandler } from "./handlers/openHandler"; 
 import { State } from "./State";
 import { Loop } from "../../lib/Loop";
+import { Entity } from "../../lib/types/Entity";
+import e from "express";
 
 
 export class Lobby {
@@ -49,9 +51,12 @@ export class Lobby {
 
     launch(tickInterval: number) {
         new Loop(tickInterval, () => {
+            this.state.updateEntitys();
+            
             this.app.publish(this.PROTOCOLS_ENUM.UPDATE, JSON.stringify({
                 type: this.PROTOCOLS_ENUM.UPDATE,
                 players: this.state.getPlayers(),
+                entitys: this.state.entitys,
                 t: Date.now()
             }));
         }).start();
