@@ -20,7 +20,7 @@ redisClient.connect().catch(console.error);
 */
 
 // Création du serveur web
-const server = Fastify({ logger: true });
+const server = Fastify({ logger: false });
 
 // Cookies
 server.register(fastifyCookie);
@@ -51,11 +51,13 @@ server.register(mainRoutes);
 
 // Lancement du serveur
 server.listen({
-	port: 3000
+	port: 8081
 }, (err, address) => {
 	if (err) {
 		server.log.error(err, address);
 		process.exit(1);
+	} else {
+		console.log("Serveur lancé sur le port 8081 : https://localhost:8081")
 	}
 });
 
