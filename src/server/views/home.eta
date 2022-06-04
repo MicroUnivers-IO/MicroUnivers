@@ -1,0 +1,6 @@
+<% layout('./layouts/main') %>
+
+<main>
+    <h1>Bienvenue sur MicroUnivers !</h1>
+    <a href="static/">Vers MicroUnivers ! (pour le dev)</a>
+</main>
