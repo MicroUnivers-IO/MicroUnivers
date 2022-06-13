@@ -88,11 +88,6 @@ export class GameMap extends Container {
         let obstacle = this.tileMatrix[row][col];
         
         if(obstacle.type === MAP_COMPONENT_TYPE.BASEGROUND) return this.tileSheet.textures["tile041.png"];
-        
-        let rect = new Graphics();
-        rect.beginFill(0xFFFF00);
-        rect.lineStyle(5, 0xFF0000);
-        rect
 
         let threshold = obstacle.threshold;
 

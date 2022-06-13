@@ -31,7 +31,7 @@ export class GamePlayer extends Container {
         
         
         this.currentSprite.anchor.set(0.5);
-       
+        
         // this.addChild(this.nameSprite);
     
         this.addChild(this.currentSprite);
@@ -81,7 +81,7 @@ export class GamePlayer extends Container {
         this.player.x += horizontal;
         this.player.y -= vertical;
 
-        this.position.set(this.player.x, this.player.y)
+        this.position.set(this.player.x, this.player.y);
     }
 
     // WORK IN PROGRESS
@@ -100,7 +100,8 @@ export class GamePlayer extends Container {
             this.currentSprite.textures = this.playerSheet.animations[this.player.action];
             this.currentSprite.play();
         }
-        this.position.set(this.player.x - this.width / 2, this.player.y - this.height / 2);
+        this.position.set(this.player.x, this.player.y);
+
     }
 
 }
