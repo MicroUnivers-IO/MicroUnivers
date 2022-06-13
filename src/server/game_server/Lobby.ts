@@ -49,10 +49,13 @@ export class Lobby {
 
     launch(tickInterval: number) {
         new Loop(tickInterval, () => {
+            this.state.updateEntitys();
+
             this.app.publish(this.PROTOCOLS_ENUM.UPDATE, JSON.stringify({
                 type: this.PROTOCOLS_ENUM.UPDATE,
                 players: this.state.getPlayers(),
-                t: Date.now()
+                entitys: this.state.entitys,
+                t: Date.now(),
             }));
         }).start();
         

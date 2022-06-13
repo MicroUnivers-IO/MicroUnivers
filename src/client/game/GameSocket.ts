@@ -35,7 +35,7 @@ export class GameSocket {
         GameSocket.ws.onmessage = (receivedMSG) => {
             let msg = JSON.parse(receivedMSG.data);
             switch (msg.type) {
-                case PROTOCOLS.INIT_PLAYER: GameSocket.initPlayer(msg); break;
+                case PROTOCOLS.INIT_PLAYER: GameSocket.initGame(msg); break;
                 case PROTOCOLS.INPUTS_ACK: console.log(msg);
                 case PROTOCOLS.UPDATE + GameSocket.ENDPOINT: GameState.processGameUpdate(msg); break;
                 default: console.log(`❌ Unhandled message type : ${msg.type}`);
@@ -49,7 +49,7 @@ export class GameSocket {
 
     }
 
-    static initPlayer(msg: any) {
+    static initGame(msg: any) {
         GameApp.setMap(msg.map);
         GameApp.setMainPlayer(msg.player as Player);
     }

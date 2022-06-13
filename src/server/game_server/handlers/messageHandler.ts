@@ -31,12 +31,11 @@ export const messageHandler = (ws: uWS.WebSocket, msg: ArrayBuffer, isBinary: bo
 
 function onHandshake(ws: uWS.WebSocket, msg: any, state: State){
     const p: Player = {
-        socket: ws,
         id: randomUUID(), //tracker dont mind
         username: "José_" + number++, //get from db
-        x: 1500, 
-        y: 1500,
-        speed: 5,
+        x: 0, 
+        y: 0,
+        speed: 10,
         action: "idle_down",
     };
 
@@ -45,7 +44,7 @@ function onHandshake(ws: uWS.WebSocket, msg: any, state: State){
     let initMSG = {
         type: PROTOCOLS.INIT_PLAYER,
         player: p,
-        map: state.mapNoise
+        map: state.tileMatrix,
     }
 
     ws.send(JSON.stringify(initMSG));

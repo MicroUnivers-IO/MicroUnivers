@@ -60,7 +60,7 @@ export class GameState {
     static getCurrentState() {
 
         // En attendant la première updaate du serveur on retourne un objet vide
-        if (!this.firstServerTimestamp) return { self: { x: 0, y: 0 }, players: [] };
+        if (!this.firstServerTimestamp) return { self: { x: 0, y: 0 }, players: [], entitys: []};
 
         const base = this.getBaseUpdate();
 
@@ -75,6 +75,7 @@ export class GameState {
             return {
                 self: this.interpolateXY(baseUpdate.self, nextUpdate.self, ratio),
                 players: this.interpolateXYArr(baseUpdate.players, nextUpdate.players, ratio),
+                entitys: this.interpolateXYArr(baseUpdate.entitys, nextUpdate.entitys, ratio),
             }
         }
     }

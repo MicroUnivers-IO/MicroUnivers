@@ -1,39 +1,82 @@
 import uWS from "uWebSockets.js";
 import { Player } from "../../lib/types/Player";
-import { makeNoise2D } from "fast-simplex-noise";
-import { makeRectangle } from "fractal-noise";
+import { ServEntity } from "./ServEntity";
+import { createMap, MapComponent} from "../../lib/common/MapComponent";
+import { MAP_PIXEL_HEIGHT, MAP_PIXEL_WIDTH} from "../../lib/common/const";
+import { QuadTree } from "../../lib/common/Quadtree";
+import { Rect } from "../../lib/common/Rect";
+import { getObstacleLines, Line } from "../../lib/common/Line";
+import { Vector } from "../../lib/common/Vector";
+
 
 export class State {
 
-    public URL: string;
-    public players: any;
-    public mapNoise: number[][];
-
+    URL: string;
+    players: any;
+    tileMatrix: MapComponent[][];
+    spawnableArea: MapComponent[];
+    obstacleLines: Line[];
+    entitys: ServEntity[];
+    entitysQuadTree: QuadTree;
+    obstacleLinesQuadTree: QuadTree;
 
     constructor(URL: string) {
         this.URL = URL;
         this.players = {};
-        this.mapNoise = makeRectangle(100, 100, makeNoise2D(), {
-            octaves: 1,
-            amplitude: 1.1,
-            frequency: 0.06
-        }) as unknown as number[][];
+
+        this.entitysQuadTree = new QuadTree(Number.MAX_SAFE_INTEGER, 100, new Rect(0,0, MAP_PIXEL_WIDTH, MAP_PIXEL_HEIGHT)).clear();
+        this.obstacleLinesQuadTree = new QuadTree(Number.MAX_SAFE_INTEGER, 100, new Rect(0,0, MAP_PIXEL_WIDTH, MAP_PIXEL_HEIGHT)).clear();
+        
+        let mapInfo = createMap();
+        this.tileMatrix = mapInfo.matrix;
+        this.spawnableArea = mapInfo.spawn
+
+        this.obstacleLines = getObstacleLines(this.tileMatrix);
+        this.obstacleLines.forEach(ol => this.obstacleLinesQuadTree.addItem(ol.x, ol.y, ol));        
+
+        this.entitys = [];
+        for(let i = 0; i < 200; i++){
+            let coord = this._randomCoordWithinSpawningArea()
+            this.entitys.push(new ServEntity(coord.x, coord.y));
+        }
     }
 
-    public addPlayer(ws: uWS.WebSocket, player: Player) {
+    private _randomCoordWithinSpawningArea(){
+        let randomSpawnableArea = this.spawnableArea[Math.floor(Math.random() * this.spawnableArea.length)];
+        
+        return new Vector(
+            randomSpawnableArea.x + randomSpawnableArea.width / 2,
+            randomSpawnableArea.y + randomSpawnableArea.heigth / 2
+        )
+    }
+
+    addPlayer(ws: uWS.WebSocket, player: Player) {
         ws.authenticated = true; // communication avec la bdd --> dans OPTIONS il y aura un JWT
+        
+        let coord = this._randomCoordWithinSpawningArea();
+        player.x = coord.x;
+        player.y = coord.y;
+
         this.players[ws.id] = player;
     }
 
-    public updatePlayer(ws: uWS.WebSocket, player: Player) {
+    updatePlayer(ws: uWS.WebSocket, player: Player) {
         this.players[ws.id] = player;
     }
 
-    public deletePlayer(ws: uWS.WebSocket) {
+    updateEntitys(){
+        let players = this.getPlayers();
+        this.entitysQuadTree.clear();
+        
+        this.entitys.forEach(entity => this.entitysQuadTree.addItem(entity.position.x, entity.position.y, entity)); //updating the quadtree
+        this.entitys.forEach(entity => entity.update(this.entitysQuadTree, players, this.obstacleLinesQuadTree));
+    }
+
+    deletePlayer(ws: uWS.WebSocket) {
         delete this.players[ws.id];
     }
 
-    public getPlayers() {
+    getPlayers() {
         let p = [];
         for (let key in this.players)
             p.push(this.players[key]);
