@@ -75,7 +75,7 @@ export class GameState {
             return {
                 self: this.interpolateXY(baseUpdate.self, nextUpdate.self, ratio),
                 players: this.interpolateXYArr(baseUpdate.players, nextUpdate.players, ratio),
-                entitys: this.interpolateXYArr(baseUpdate.entitys, nextUpdate.entitys, ratio)
+                entitys: this.interpolateXYArr(baseUpdate.entitys, nextUpdate.entitys, ratio),
             }
         }
     }

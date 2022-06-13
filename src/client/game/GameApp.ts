@@ -1,27 +1,32 @@
-import { Application, Sprite, Spritesheet, Texture } from "pixi.js";
+import { Application, Renderer, Sprite, Spritesheet, Texture } from "pixi.js";
 import { Entity } from "../../lib/types/Entity";
+import { MapComponent } from "../../lib/common/MapComponent";
 import { Player } from "../../lib/types/Player";
 import { GameEntity } from "./GameEntity";
 import { GameMap } from "./GameMap";
 import { GamePlayer } from "./GamePlayer";
 import { GameSocket } from "./GameSocket";
 import { GameState } from "./GameState";
+import { Vector } from "../../lib/common/Vector";
+import { Line } from "../../lib/common/Line";
 
 export class GameApp {
-    private static app: Application;
+    static app: Application;
 
-    public static map: GameMap;
-    public static collisionMatrix: number[][]; //no setter needed
-    public static players: GamePlayer[] = [];
-    public static entitys: GameEntity[] = [];
-    public static mainPlayer: GamePlayer;
-    public static state: GameState;
+    static map: GameMap;
+    static collisionMatrix: number[][];
+    static players: GamePlayer[] = [];
+    static entitys: GameEntity[] = [];
+    static mainPlayer: GamePlayer;
+    static state: GameState;
 
     static north: boolean = false;
     static south: boolean = false;
     static west: boolean = false;
     static east: boolean = false;
     static attack: boolean = false;
+    static direction: string = "down";
+
 
     static init(PORT:number, URL:string) {
         GameApp.app = new Application({
@@ -44,7 +49,8 @@ export class GameApp {
 
             GameApp.app.ticker.maxFPS = 60;
         });
-        
+        GameApp.app.stage.interactive = true;
+        GameApp.app.stage.on('pointermove', GameApp.updateDirectionFromMouse);
     }
 
     static setMainPlayer(player: Player) {
@@ -53,8 +59,8 @@ export class GameApp {
         GameApp.map.pivot.copyFrom(GameApp.mainPlayer.position);
     }
 
-    static setMap(mapNoise: number[][]) {
-        GameApp.map = new GameMap(GameApp.app.loader.resources["tileSet"].spritesheet as Spritesheet, mapNoise);
+    static setMap(tileMatrix: MapComponent[][]) {
+        GameApp.map = new GameMap(GameApp.app.loader.resources["tileSet"].spritesheet as Spritesheet, tileMatrix);
         GameApp.app.stage.addChild(GameApp.map);
     }
 
@@ -100,7 +106,7 @@ export class GameApp {
         const state: any = GameState.getCurrentState();
         
         //GameApp.mainPlayer.updateMain2(GameApp.north, GameApp.south, GameApp.west, GameApp.east, GameApp.attack, state.me.x, state.me.y);
-        GameApp.mainPlayer.updateMain(GameApp.north, GameApp.south, GameApp.west, GameApp.east, GameApp.attack);
+        GameApp.mainPlayer.updateMain(GameApp.north, GameApp.south, GameApp.west, GameApp.east, GameApp.attack , GameApp.direction);
 
         let newP;
         for (let i = 0; i < state.players.length; ++i) {
@@ -123,7 +129,6 @@ export class GameApp {
             newE = true;
             for(let j = 0; j < GameApp.entitys.length; j++){
                 if(GameApp.entitys[j].entity.id == state.entitys[i].id){
-                
                     GameApp.entitys[j].update(state.entitys[i]);
                     newE = false;
                     break;
@@ -137,8 +142,39 @@ export class GameApp {
         GameApp.map.pivot.copyFrom(GameApp.mainPlayer.position);
         if (GameApp.attack) GameApp.attack = false;
         
-
-
         GameSocket.sendUpdate(GameApp.mainPlayer.player);
+    }
+
+    static isPointInTriangle(s: Vector, a: Vector, b: Vector, c: Vector){
+        //https://stackoverflow.com/a/20861130
+        //pas d'explication dsl
+        
+        let as_x = s.x - a.x;
+        let as_y = s.y - a.y;
+
+        let s_ab = (b.x-a.x)*as_y-(b.y-a.y)*as_x > 0;
+
+        if((c.x-a.x)*as_y-(c.y-a.y)*as_x > 0 == s_ab) return false;
+    
+        if((c.x-b.x)*(s.y-b.y)-(c.y-b.y)*(s.x-b.x) > 0 != s_ab) return false;
+    
+        return true;
+    }
+
+    static updateDirectionFromMouse(e: any){
+        if(!GameApp.mainPlayer) return;
+        
+        let mousePos = new Vector(e.data.global.x, e.data.global.y) ;
+
+        let topLeft = new Vector(0, 0);
+        let bottomLeft = new Vector(0, window.innerHeight);
+        let topRight = new Vector(window.innerWidth, 0);
+        let bottomRight = new Vector(window.innerWidth, window.innerHeight);
+        let mid = new Vector(window.innerWidth / 2, window.innerHeight / 2);
+
+        if(GameApp.isPointInTriangle(mousePos, topLeft, bottomLeft, mid)) GameApp.direction = "left";
+        if(GameApp.isPointInTriangle(mousePos, topLeft, topRight, mid)) GameApp.direction = "up";
+        if(GameApp.isPointInTriangle(mousePos, topRight, bottomRight, mid)) GameApp.direction = "right";
+        if(GameApp.isPointInTriangle(mousePos, bottomRight, bottomLeft, mid)) GameApp.direction = "down";
     }
 }

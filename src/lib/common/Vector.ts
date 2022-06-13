@@ -1,3 +1,5 @@
+import { runInThisContext } from "vm";
+
 export class Vector{
 
     x: number;
@@ -43,6 +45,12 @@ export class Vector{
         return this;
     }
 
+    invert(){
+        this.invertX();
+        this.invertY();
+        return this;
+    }
+
     distance(v: Vector){
         let delta = new Vector(this.x - v.x, this.y - v.y);
         return Math.sqrt(delta.x**2 + delta.y**2);
@@ -66,6 +74,36 @@ export class Vector{
         let newMag = Math.min(currentMag, maxMag) / currentMag;
         this.x *= newMag;
         this.y *= newMag;
+        return this;
+    }
+
+    dotProduct(v: Vector){
+        return this.x * v.x + this.y * v.y;
+    }
+
+    getAngle(v: Vector){
+        let delta = new Vector(
+            v.x - this.x, this.y - v.y
+        );
+        let angle = Math.atan2(delta.y, delta.x);
+        
+        return angle < 0 ? angle + (Math.PI * 2) : angle;  
+    }
+
+    circlePoint(angle: number, radius: number){
+        return new Vector(
+            (Math.cos(angle) * radius) + this.x,
+            Math.abs((Math.sin(angle) * radius) - this.y), //ca marche on touche plus
+        );
+    }
+
+    copy(){
+        return new Vector(this.x, this.y);
+    }
+
+    round(){
+        this.x = Math.round(this.x);
+        this.y = Math.round(this.y);
         return this;
     }
 }
