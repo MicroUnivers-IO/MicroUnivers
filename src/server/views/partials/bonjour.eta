@@ -1,0 +1,1 @@
+<h2>Bonjour <%= it.username %>, comment allez vous ?</h2>

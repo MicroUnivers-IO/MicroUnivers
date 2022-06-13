@@ -1,0 +1,6 @@
+<% layout('./layouts/main') %>
+
+<main>
+  <%~ includeFile('./partials/bonjour.eta', { username: it.username }) %>
+  <h3>Bientôt ici la page d'authentification.</h3>
+</main>

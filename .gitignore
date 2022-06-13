@@ -3,3 +3,4 @@ dist
 */dist/
 /src/client/static/bundle-microunivers.js
 *.vscode
+.env
