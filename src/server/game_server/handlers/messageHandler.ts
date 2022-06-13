@@ -31,7 +31,6 @@ export const messageHandler = (ws: uWS.WebSocket, msg: ArrayBuffer, isBinary: bo
 
 function onHandshake(ws: uWS.WebSocket, msg: any, state: State){
     const p: Player = {
-        socket: ws,
         id: randomUUID(), //tracker dont mind
         username: "José_" + number++, //get from db
         x: 0, 

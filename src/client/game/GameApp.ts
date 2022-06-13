@@ -1,4 +1,4 @@
-import { Application, Renderer, Sprite, Spritesheet, Texture } from "pixi.js";
+import { Application, Sprite, Spritesheet, Texture } from "pixi.js";
 import { Entity } from "../../lib/types/Entity";
 import { MapComponent } from "../../lib/common/MapComponent";
 import { Player } from "../../lib/types/Player";
@@ -8,7 +8,6 @@ import { GamePlayer } from "./GamePlayer";
 import { GameSocket } from "./GameSocket";
 import { GameState } from "./GameState";
 import { Vector } from "../../lib/common/Vector";
-import { Line } from "../../lib/common/Line";
 
 export class GameApp {
     static app: Application;

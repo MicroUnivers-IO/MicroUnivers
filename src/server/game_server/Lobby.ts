@@ -5,8 +5,6 @@ import { messageHandler } from "./handlers/messageHandler";
 import { openHandler } from "./handlers/openHandler"; 
 import { State } from "./State";
 import { Loop } from "../../lib/Loop";
-import { Entity } from "../../lib/types/Entity";
-import e from "express";
 
 
 export class Lobby {

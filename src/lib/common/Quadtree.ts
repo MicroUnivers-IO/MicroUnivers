@@ -140,6 +140,7 @@ export class QuadTree {
     */
     clear() {
         this.rootBin = new QuadTreeBin(this.maxDepth, this.maxItemsPerBin, new Rect(0, 0, this.extent.width, this.extent.height));
+        return this;
     }
 
     /*

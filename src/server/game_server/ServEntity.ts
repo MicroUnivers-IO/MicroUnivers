@@ -1,14 +1,11 @@
 import { Vector } from "../../lib/common/Vector";
 import { Entity } from "../../lib/types/Entity";
-import { getLimitLines, isVectorInComponent, isVectorInComponents, MapComponent } from "../../lib/common/MapComponent";
+import { getLimitLines } from "../../lib/common/MapComponent";
 import { Player } from "../../lib/types/Player";
 import { QuadTree } from "../../lib/common/Quadtree";
 import { MAP_PIXEL_HEIGHT, MAP_PIXEL_WIDTH } from "../../lib/common/const";
-import { addAngle, degreeToRad, roundTo2ndDecimal } from "../../lib/common/utils";
-import { State } from "./State";
+import { addAngle, degreeToRad } from "../../lib/common/utils";
 import { Line, linesCollinding } from "../../lib/common/Line";
-import e from "express";
-import { collidingResponse, Rect } from "../../lib/common/Rect";
 
 
 export class ServEntity implements Entity{
@@ -168,7 +165,7 @@ export class ServEntity implements Entity{
         return steering;
     }
 
-    collisionAvoidance(obstaclesQuadtree: QuadTree, state: State){        
+    collisionAvoidance(obstaclesQuadtree: QuadTree){        
         let obstacles = obstaclesQuadtree.getItemsInRadius(this.x, this.y, ServEntity.RADIUS_OBSTACLE, ServEntity.MAX_ITEMS) as Line[];
         obstacles.push(...getLimitLines());  //ajoute les 4 bordures de la map
 
@@ -205,7 +202,7 @@ export class ServEntity implements Entity{
         this.velocity  = bestDir.sub(this.position).setMag(ServEntity.maxSpeed);
     }
 
-    flock(entitysQuadTree: QuadTree, players: Player[], obstaclesQuadtree: QuadTree, state: State){                 
+    flock(entitysQuadTree: QuadTree, players: Player[]){                 
         let alignment = this.align(entitysQuadTree);
         let cohesion = this.cohesion(entitysQuadTree);
         let separation = this.separation(entitysQuadTree);
@@ -221,12 +218,12 @@ export class ServEntity implements Entity{
         .add(target)
     } 
 
-    update(entitysQuadTree: QuadTree, players: Player[], obstaclesQuadtree: QuadTree, state: State){                
+    update(entitysQuadTree: QuadTree, players: Player[], obstaclesQuadtree: QuadTree){                
         this.edges(); 
-        this.flock(entitysQuadTree, players, obstaclesQuadtree, state);
+        this.flock(entitysQuadTree, players);
         this.velocity.add(this.acceleration);
         this.velocity.limit(ServEntity.maxSpeed);
-        this.collisionAvoidance(obstaclesQuadtree ,state)
+        this.collisionAvoidance(obstaclesQuadtree)
         this.position.add(this.velocity);
         this.acceleration.mult(0); //reset
         this.x = this.position.x;

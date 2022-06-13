@@ -1,6 +1,5 @@
 import { Container, AnimatedSprite, Text, Spritesheet } from 'pixi.js';
 import { Player } from '../../lib/types/Player';
-import { GameApp } from './GameApp';
 
 export class GamePlayer extends Container {
 

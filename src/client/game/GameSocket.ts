@@ -1,4 +1,3 @@
-import { Line } from "../../lib/common/Line";
 import { PROTOCOLS } from "../../lib/enums/protocols";
 import { Player } from "../../lib/types/Player";
 import { GameApp } from "./GameApp";

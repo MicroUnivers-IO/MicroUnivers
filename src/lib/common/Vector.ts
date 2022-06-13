@@ -100,10 +100,4 @@ export class Vector{
     copy(){
         return new Vector(this.x, this.y);
     }
-
-    round(){
-        this.x = Math.round(this.x);
-        this.y = Math.round(this.y);
-        return this;
-    }
 }

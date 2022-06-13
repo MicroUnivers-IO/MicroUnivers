@@ -60,12 +60,6 @@ export const getObstacleLines = (tileMatrix: MapComponent[][]) => {
 
 const lineColliding = (v1: Vector, v2: Vector, v3: Vector, v4: Vector) => {
     // http://paulbourke.net/geometry/pointlineplane/javascript.txt
-
-    // v1.round();
-    // v2.round();
-    // v3.round();
-    // v4.round();
-
     if((v1.x === v2.x && v1.y === v2.y) || (v3.x === v4.x && v3.y === v4.y)) return false;
      
 

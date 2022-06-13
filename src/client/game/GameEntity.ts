@@ -1,9 +1,5 @@
-import { Container, Sprite, Spritesheet } from "pixi.js";
-import { addAngle, degreeToRad } from "../../lib/common/utils";
-import { Vector } from "../../lib/common/Vector";
+import { Container, Sprite } from "pixi.js";
 import { Entity } from "../../lib/types/Entity";
-import { ServEntity } from "../../server/game_server/ServEntity";
-import { GameApp } from "./GameApp";
 
 export class GameEntity extends Container{
     entity: Entity

@@ -1,13 +1,10 @@
 import uWS from "uWebSockets.js";
 import { Player } from "../../lib/types/Player";
-import { makeNoise2D } from "fast-simplex-noise";
-import { makeRectangle } from "fractal-noise";
 import { ServEntity } from "./ServEntity";
-import { createMap, createMapComponent, MapComponent} from "../../lib/common/MapComponent";
-import { MAP_HEIGTH, MAP_PIXEL_HEIGHT, MAP_PIXEL_WIDTH, MAP_WIDTH, TILE_HEIGHT, TILE_WIDTH } from "../../lib/common/const";
+import { createMap, MapComponent} from "../../lib/common/MapComponent";
+import { MAP_PIXEL_HEIGHT, MAP_PIXEL_WIDTH} from "../../lib/common/const";
 import { QuadTree } from "../../lib/common/Quadtree";
 import { Rect } from "../../lib/common/Rect";
-import { Entity } from "../../lib/types/Entity";
 import { getObstacleLines, Line } from "../../lib/common/Line";
 import { Vector } from "../../lib/common/Vector";
 
@@ -27,23 +24,17 @@ export class State {
         this.URL = URL;
         this.players = {};
 
-        this.entitysQuadTree = new QuadTree(Number.MAX_SAFE_INTEGER, 100, new Rect(0,0, MAP_PIXEL_WIDTH, MAP_PIXEL_HEIGHT));
-        this.obstacleLinesQuadTree = new QuadTree(Number.MAX_SAFE_INTEGER, 100, new Rect(0,0, MAP_PIXEL_WIDTH, MAP_PIXEL_HEIGHT));
-
-        this.entitysQuadTree.clear();
-        this.obstacleLinesQuadTree.clear();
-
-
+        this.entitysQuadTree = new QuadTree(Number.MAX_SAFE_INTEGER, 100, new Rect(0,0, MAP_PIXEL_WIDTH, MAP_PIXEL_HEIGHT)).clear();
+        this.obstacleLinesQuadTree = new QuadTree(Number.MAX_SAFE_INTEGER, 100, new Rect(0,0, MAP_PIXEL_WIDTH, MAP_PIXEL_HEIGHT)).clear();
+        
         let mapInfo = createMap();
         this.tileMatrix = mapInfo.matrix;
         this.spawnableArea = mapInfo.spawn
 
         this.obstacleLines = getObstacleLines(this.tileMatrix);
-
         this.obstacleLines.forEach(ol => this.obstacleLinesQuadTree.addItem(ol.x, ol.y, ol));        
 
         this.entitys = [];
-        
         for(let i = 0; i < 200; i++){
             let coord = this._randomCoordWithinSpawningArea()
             this.entitys.push(new ServEntity(coord.x, coord.y));
@@ -77,11 +68,8 @@ export class State {
         let players = this.getPlayers();
         this.entitysQuadTree.clear();
         
-        this.entitys.forEach(entity => this.entitysQuadTree.addItem(entity.position.x, entity.position.y, entity));
-        
-        this.entitys.forEach(entity => entity.update(this.entitysQuadTree, players, this.obstacleLinesQuadTree, this));
-
-        // this.entitys[0].update(this.entitysQuadTree, players, this.obstacleLinesQuadTree, this);
+        this.entitys.forEach(entity => this.entitysQuadTree.addItem(entity.position.x, entity.position.y, entity)); //updating the quadtree
+        this.entitys.forEach(entity => entity.update(this.entitysQuadTree, players, this.obstacleLinesQuadTree));
     }
 
     deletePlayer(ws: uWS.WebSocket) {

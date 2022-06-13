@@ -1,6 +1,3 @@
-import { MapComponent } from "./MapComponent";
-import { Vector } from "./Vector";
-
 export const addAngle = (a: number, b: number) => {
     let newAngle = a + b;
     return newAngle < 0 ? newAngle + (Math.PI * 2) : newAngle % (Math.PI * 2);

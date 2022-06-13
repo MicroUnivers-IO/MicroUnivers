@@ -1,10 +1,8 @@
-import { Container, Graphics, Renderer, RenderTexture, Resource, Spritesheet, Texture } from "pixi.js";
+import { Container, Graphics, Resource, Spritesheet, Texture } from "pixi.js";
 import { CompositeTilemap } from "@pixi/tilemap";
 
 import { MapComponent, MAP_COMPONENT_TYPE } from "../../lib/common/MapComponent";
 import { MAP_HEIGTH, MAP_WIDTH, TILE_HEIGHT, TILE_WIDTH } from "../../lib/common/const";
-import { GameApp } from "./GameApp";
-import { Line } from "../../lib/common/Line";
 
 
 export class GameMap extends Container {
