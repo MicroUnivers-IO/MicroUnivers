@@ -21,7 +21,7 @@ export interface MapComponent{
 }
 
 const isHighGround = (value: number) => {
-    return value > 0.7;
+    return value > 0.2;
 }
 
 const isLowGround = (value: number) => {

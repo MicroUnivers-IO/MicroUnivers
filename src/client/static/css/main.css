@@ -1,10 +1,35 @@
+:root {
+    --bg-color: #1B5A7A;
+    --el-bg-color: #1AA59A;
+    --el-color-1: #A6ED8E;
+    --el-color-2: #F3FFB9;
+    --txt-col-dark: #424242;
+    --txt-col-medium: #787878;
+    --txt-col-clear: #eaeaea;
+}
+
 * {
     padding: 0;
     margin: 0;
 }
 
+html {
+    overflow-y: auto !important;
+    overflow-x: auto !important;
+}
+
+#pixi-content {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top:0;
+    left: 0;
+    overflow: hidden;
+}
+
+
 body {
-    background-color: tan;
+    background-color: var(--bg-color);
     height: 100vh;
     width: 100vw;
     display: flex;
@@ -15,9 +40,48 @@ body {
 }
 
 main {
+    margin-top: auto;
+    padding: 20px;
+    max-width: 98vw;
+    width: 800px;
     text-align: center;
+    background-color: var(--el-bg-color);
+    overflow-y: auto;
+    box-shadow: #424242 1px 1px 3px;
+    border-radius: 2px;
 }
 
 footer {
     padding-top: 20px;
+    margin-top: auto;
+    padding-bottom: 10px;
+    color: var(--txt-col-clear)
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+}
+
+nav a {
+    width: 300px;
+    max-width: 100%;
+    background-color: var(--el-color-2);
+    padding: 5px 8px;
+    margin-top: 10px;
+    border-radius: 3px;
+    text-decoration: none;
+    color: black;
+}
+
+nav a:hover {
+    background-color: var(--el-color-1);
+}
+
+/* Utils */
+
+.display-none {
+    display: none;
 }

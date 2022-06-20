@@ -27,7 +27,7 @@ export class GameApp {
     static direction: string = "down";
 
 
-    static init(PORT:number, URL:string) {
+    static init(PORT:number, URL:string, TOKEN:string | null = null) {
         GameApp.app = new Application({
             view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
             resolution: window.devicePixelRatio || 1,
@@ -36,14 +36,14 @@ export class GameApp {
             backgroundColor: 0x000000
         });
 
-        GameApp.app.loader.add("playerSpritesheet", "assets/player/sheet.json");
-        GameApp.app.loader.add("tileSet", "assets/tileset/texture.json");
-        GameApp.app.loader.add("e", "assets/entity/entity.png");
-        GameApp.app.loader.add("test", "assets/player/vahed.json");
+        GameApp.app.loader.add("playerSpritesheet", "static/assets/player/sheet.json");
+        GameApp.app.loader.add("tileSet", "static/assets/tileset/texture.json");
+        GameApp.app.loader.add("e", "static/assets/entity/entity.png");
+        GameApp.app.loader.add("test", "static/assets/player/vahed.json");
 
 
         GameApp.app.loader.load((loader, resources) => {
-            GameSocket.init(PORT, URL);
+            GameSocket.init(PORT, URL, TOKEN);
             GameApp.app.ticker.add(GameApp.gameLoop);
 
             GameApp.app.ticker.maxFPS = 60;

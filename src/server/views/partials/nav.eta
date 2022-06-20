@@ -1,0 +1,10 @@
+<nav>
+    <a href="static/" class="button">DEV LINK</a>
+
+    <% if (it.userdata != undefined) { %>
+        <a href="play" class="button">Jouer</a>
+    <% } else { %>
+        <a href="auth" class="button">Jouer</a>
+    <% } %>
+        <a href="guestServs" class="button" style="margin-top: 30px;">Guest Serv</a>
+</nav>

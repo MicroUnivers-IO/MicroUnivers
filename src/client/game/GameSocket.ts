@@ -10,7 +10,7 @@ export class GameSocket {
     static PORT: number;
 
 
-    static init(PORT: number, ENDPOINT: string, SERVER_URL: string = location.hostname) {
+    static init(PORT: number, ENDPOINT: string, TOKEN: string | null, SERVER_URL: string = location.hostname) {
         
         // trycatch pour le dev sinon toujours HTTPS en production
         try {
@@ -25,7 +25,10 @@ export class GameSocket {
         GameSocket.ws = new WebSocket(GameSocket.SOCKET_URL);
 
         GameSocket.ws.onopen = () => {
-            let handshakeMSG = { type: PROTOCOLS.CLI_HANDSHAKE };
+            let handshakeMSG = { 
+                type: PROTOCOLS.CLI_HANDSHAKE,
+                token: TOKEN
+            };
 
             GameSocket.ws.send(JSON.stringify(handshakeMSG));
             console.log(`🔌 Socket connected : ${GameSocket.SOCKET_URL}`);
@@ -38,20 +41,27 @@ export class GameSocket {
                 case PROTOCOLS.INIT_PLAYER: GameSocket.initGame(msg); break;
                 case PROTOCOLS.INPUTS_ACK: console.log(msg);
                 case PROTOCOLS.UPDATE + GameSocket.ENDPOINT: GameState.processGameUpdate(msg); break;
+                case PROTOCOLS.CONN_ERROR: GameSocket.connError(msg); break;
                 default: console.log(`❌ Unhandled message type : ${msg.type}`);
             }
         }
 
         GameSocket.ws.onclose = () => {
-            console.log(`🔍 Connexion lost with the server, reloading...`);
-            location.reload();
+            console.log(`🔍 Connexion lost with the server, try to reload...`);
+            //location.reload();
         }
 
     }
 
+
     static initGame(msg: any) {
         GameApp.setMap(msg.map);
         GameApp.setMainPlayer(msg.player as Player);
+    }
+
+    static connError(msg: any) {
+        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAA");
+        alert(msg.error);
     }
 
     static sendUpdate(player: Player) {
@@ -61,5 +71,6 @@ export class GameSocket {
         }
         this.ws.send(JSON.stringify(updateMSG));
     }
+
 
 }

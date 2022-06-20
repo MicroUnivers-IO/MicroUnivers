@@ -1,0 +1,15 @@
+<% if (it.formError) { %>
+<ul>
+    <% if( Array.isArray(it.formError)) { %>
+
+        <% it.formError.forEach((err) => { %>
+        <li><%= err %></li>
+        <% }) %>
+
+    <% } else {  %>
+
+        <li><%= it.formError %> </li>
+
+    <% } %>
+</ul>
+<% } %>

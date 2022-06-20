@@ -12,7 +12,7 @@ export class GamePlayer extends Container {
 
     constructor(player: Player, spriteSheet: Spritesheet) {
         super();
-        
+        console.log(player);
         this.pastDirection = "down";
         this.player = player;
         this.playerSheet = spriteSheet;
@@ -32,7 +32,10 @@ export class GamePlayer extends Container {
         
         this.currentSprite.anchor.set(0.5);
         
-        // this.addChild(this.nameSprite);
+        this.nameSprite.x += -25;
+        this.nameSprite.y += -40;
+
+        this.addChild(this.nameSprite);
     
         this.addChild(this.currentSprite);
         this.position.set(player.x, player.y);

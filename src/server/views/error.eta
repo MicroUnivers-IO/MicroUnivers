@@ -1,0 +1,4 @@
+<h4>
+    Une erreur est survenue :
+    <%= it.error %>
+</h4>

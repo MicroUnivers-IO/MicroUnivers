@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MicroUnivers - Profil</title>
+    <%~ includeFile('./partials/assets.eta') %>
+</head>
+
+<body>
+
+    <main>
+        <h3>Inscription</h3>
+        <form action="" method="post">
+
+            <p>
+                <input name="username" type="text" placeholder="Nom d'utilisateur">
+            </p>
+
+            <p>
+                <input name="email" type="email" placeholder="Email">
+            </p>
+
+            <p>
+                <input name="password" type="password" placeholder="Mot de passe">
+            </p>
+            <p>
+                <input name="confirmPassword" type="password" placeholder="Confirmation">
+            </p>
+
+
+            <%~ includeFile('./partials/formError.eta', { formError: it.formError }) %>
+
+                <p>
+                    <button>
+                        S'inscrire
+                    </button>
+                </p>
+        </form>
+    </main>
+
+    <%~ includeFile('./partials/footer.eta') %>
+
+</body>
+
+</html>

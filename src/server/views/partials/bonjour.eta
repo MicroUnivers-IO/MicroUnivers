@@ -1,1 +1,5 @@
-<h2>Bonjour <%= it.username %>, comment allez vous ?</h2>
+<h2>Bonjour 
+    <% if (it.username) { %>
+            <%= it.username %>
+    <% }%>
+comment allez vous ?</h2>

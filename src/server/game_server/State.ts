@@ -7,11 +7,14 @@ import { QuadTree } from "../../lib/common/Quadtree";
 import { Rect } from "../../lib/common/Rect";
 import { getObstacleLines, Line } from "../../lib/common/Line";
 import { Vector } from "../../lib/common/Vector";
+import { LobbyOpts } from "./Lobby";
 
 
 export class State {
 
+    lobbyOpts: LobbyOpts;
     URL: string;
+    guestLobby: boolean;
     players: any;
     tileMatrix: MapComponent[][];
     spawnableArea: MapComponent[];
@@ -20,8 +23,10 @@ export class State {
     entitysQuadTree: QuadTree;
     obstacleLinesQuadTree: QuadTree;
 
-    constructor(URL: string) {
-        this.URL = URL;
+    constructor(opts: LobbyOpts) {
+        this.lobbyOpts = opts;
+        this.URL = opts.url;
+        this.guestLobby = opts.guestLobby;
         this.players = {};
 
         this.entitysQuadTree = new QuadTree(Number.MAX_SAFE_INTEGER, 100, new Rect(0,0, MAP_PIXEL_WIDTH, MAP_PIXEL_HEIGHT)).clear();
@@ -50,8 +55,14 @@ export class State {
         )
     }
 
+
+    /*
+    Vérifier qu'un joueur n'est pas déjà connecté avec le même pseudo !!!!!!
+    */
     addPlayer(ws: uWS.WebSocket, player: Player) {
         ws.authenticated = true; // communication avec la bdd --> dans OPTIONS il y aura un JWT
+        
+        console.log(this.players);
         
         let coord = this._randomCoordWithinSpawningArea();
         player.x = coord.x;

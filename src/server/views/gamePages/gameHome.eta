@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MicroUnivers - Serveurs de Jeux</title>
+    <%~ includeFile('./partials/assets.eta') %>
+    <script src="static/bundle-microunivers.js"></script>
+
+</head>
+
+<body>
+    <div id="pixi-content" class="display-none"><canvas id="pixi-canvas"></div>
+
+    <main>
+        <h1>Rejoindre ou créer une partie</h1>
+        <ul>
+
+            <% it.lobbies.forEach((lobby) => { %>
+                <li data-url=<%= lobby.url %> data-port=<%= lobby.port %> data-guestLobby=<%= lobby.guestLobby %> onclick="joinGame(event)">
+                    Nom: <%= lobby.name %> -- joueurs : <%= `${lobby.nbPlayers}/${lobby.maxPlayer}`%> <%= lobby.guestLobby = true ? "- Serveur Guest" : "" %>
+                </li>
+            <% }) %>
+
+        </ul>
+
+
+    </main>
+
+    <%~ includeFile('./partials/footer.eta') %>
+
+</body>
+
+</html>

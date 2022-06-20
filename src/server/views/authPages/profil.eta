@@ -11,14 +11,19 @@
 
 <body>
 
-    <main>
-        <h1>Bienvenue sur MicroUnivers !</h1>
-        
-        <%~ includeFile('./partials/nav.eta', { userdata: it.userdata }) %>
+  <main>
+    <%~ includeFile('./partials/bonjour.eta', { username: it.userdata.username }) %>
 
+    <ul>
+      <li>Nom d'utilisateur : <%= it.userdata.username %></li>
+      <li>Adresse e-mail : <%= it.userdata.email %></li>
+      <li>Vérifié : <%= it.userdata.verifyToken == null ? "vrai" : "faux" %></li>
+    </ul>
 
-    </main>
+    <a href="/">Accueil</a>
+  </main>
 
+  
     <%~ includeFile('./partials/footer.eta') %>
 
 </body>
