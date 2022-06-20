@@ -80,6 +80,24 @@ nav a:hover {
     background-color: var(--el-color-1);
 }
 
+.servers {
+    width: 100%;
+    list-style: none;
+}
+.servers li {
+    background-color: #A6ED8E;
+    width: 60%;
+    margin: 0 auto;
+    padding: 10px;
+    border: 1px palevioletred solid;
+    cursor: pointer;
+}
+
+.servers li:hover {
+    scale: 1.05;
+    opacity: 0.8;
+    
+}
 /* Utils */
 
 .display-none {

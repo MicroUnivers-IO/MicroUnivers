@@ -16,7 +16,7 @@
 
     <main>
         <h1>Rejoindre une partie ouverte</p></h1>
-        <ul>
+        <ul class="servers">
 
             <% it.lobbies.forEach((lobby) => { %>
                 <li data-url=<%= lobby.url %> data-port=<%= lobby.port %> data-guestLobby=<%= lobby.guestLobby %> onclick="joinGame(event)">
