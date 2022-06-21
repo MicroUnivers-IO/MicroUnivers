@@ -5,23 +5,21 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MicroUnivers - Vérfication</title>
+    <title>MicroUnivers - Profil</title>
     <%~ includeFile('./partials/assets.eta') %>
 </head>
 
 <body>
 
-  <main>
+    <main>
+        <h1>Opération réussie !</h1>
+        
+        <p><%= it.message %></p>
 
-    <% if(it.userdata && it.userdata.verifyToken) { %>
-        <p>Veuillez verifier votre compte !</p>
-    <% } else { %>
-        <p>Votre compte est bien validé.</p>
-    <% } %>
-    <a href="/">Accueil</a>
-  </main>
+        <a href="/">Accueil</a>
 
-  
+    </main>
+
     <%~ includeFile('./partials/footer.eta') %>
 
 </body>

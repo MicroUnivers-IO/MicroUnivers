@@ -22,12 +22,15 @@
             <p>
                 <input name="email" type="email" placeholder="Email">
             </p>
+            <p>
+                <input name="confirmEmail" type="email" placeholder="Confirmation mail">
+            </p>
 
             <p>
                 <input name="password" type="password" placeholder="Mot de passe">
             </p>
             <p>
-                <input name="confirmPassword" type="password" placeholder="Confirmation">
+                <input name="confirmPassword" type="password" placeholder="Confirmation pass">
             </p>
 
 

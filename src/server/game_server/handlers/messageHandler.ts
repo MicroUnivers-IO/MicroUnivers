@@ -40,11 +40,11 @@ async function onHandshake(ws: uWS.WebSocket, msg: any, state: State) {
         const token = JSON.parse(decrypt(msg.token, state.lobbyOpts.secret as string));
 
         // vérification des infos
-        const userData = await getUser(token.username);
+        const userdata = await getUser(token.username);
 
-        if (userData) {
-            console.log("USERDATA :", userData);
-            p.username = userData.username;
+        if (userdata) {
+            console.log("USERDATA :", userdata);
+            p.username = userdata.username;
             
         } else {
             ws.send(JSON.stringify({

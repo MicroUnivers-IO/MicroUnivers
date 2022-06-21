@@ -34,7 +34,7 @@ server.register(FastifySessionPlugin as any, {
 
 // Gestion des formulaires html
 server.register(formBodyPlugin, {
-	bodyLimit: 100 // Limite en octet de la taille d'une requête
+	bodyLimit: 500 // Limite en octet de la taille d'une requête
 });
 
 // Déclaration de pointOfView (template engine manager) et du template engine "Eta"
@@ -78,7 +78,7 @@ gameServer.createLobby({
 	url: '/dev1',
 	guestLobby: true,
 	maxPlayer: 10
-}, 70);
+}, 50);
 
 gameServer.createLobby({
 	name: 'LoggedOnly',
