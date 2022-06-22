@@ -14,7 +14,8 @@
   <main>
 
     <% if(it.userdata && it.userdata.verifyToken) { %>
-        <p>Veuillez verifier votre compte !</p>
+        <h3>Veuillez verifier votre compte !</h3>
+        <p>Un mail de valdiation à été envoyé à votre adresse : <%= it.userdata.email %></p>
     <% } else { %>
         <p>Votre compte est bien validé.</p>
     <% } %>

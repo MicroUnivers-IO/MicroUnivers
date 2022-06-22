@@ -30,7 +30,8 @@ export async function sendVerifMail(username:string, email:string, verifyToken:s
         <h2><a href="https://microunivers.io/verify?token=${verifyToken}">Valider votre compte</a><h2>
         <br />
         <p>Vous avez une heure pour valider votre compte, dans le cas contraire votre inscription sera annulée.</p>
-        `
+        `,
+        text: `Lien : https://microunivers.io/verify?token=${verifyToken}`
     }));
 
 }
