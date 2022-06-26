@@ -12,7 +12,7 @@
 <body>
 
     <main>
-        <h3>Inscription</h3>
+        <h1>Inscription</h1>
         <form action="" method="post">
 
             <p>

@@ -11,7 +11,7 @@
 
 <body>
     <main>
-        <h3>Authentification</h3>
+        <h1>Authentification</h1>
         <form action="" method="post">
 
             <p>
