@@ -1,21 +1,27 @@
 :root {
-    --bg-color: #1B5A7A;
-    --el-bg-color: #1AA59A;
+    --bg-color: #e7e3e3;
+    --el-bg-color: #1aa5993d;
     --el-color-1: #A6ED8E;
     --el-color-2: #F3FFB9;
     --txt-col-dark: #424242;
     --txt-col-medium: #787878;
-    --txt-col-clear: #eaeaea;
+    --txt-col-clear: #000000;
 }
 
+@font-face {
+    font-family: mainFont;
+    src: url(../fonts/water_galon/Water\ Galon.ttf);
+  }
+
 * {
+    font-family: mainFont;
     padding: 0;
     margin: 0;
 }
 
 html {
     overflow-y: auto !important;
-    overflow-x: auto !important;
+    overflow-x: auto !important;    
 }
 
 #pixi-content {
@@ -29,6 +35,7 @@ html {
 
 
 body {
+    position: relative;
     background-color: var(--bg-color);
     height: 100vh;
     width: 100vw;
@@ -37,25 +44,34 @@ body {
     align-items: center;
     flex-direction: column;
     font-family: sans-serif;
+    gap:3rem;
+    overflow-y: auto !important;
+    overflow-x: auto !important;  
 }
 
 main {
-    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
     padding: 20px;
     max-width: 98vw;
-    width: 800px;
+    width: fit-content;
     text-align: center;
     background-color: var(--el-bg-color);
     overflow-y: auto;
     box-shadow: #424242 1px 1px 3px;
     border-radius: 2px;
+    margin-left: 30%;
+    
 }
 
 footer {
     padding-top: 20px;
-    margin-top: auto;
     padding-bottom: 10px;
-    color: var(--txt-col-clear)
+    color: var(--txt-col-clear);
+    position:absolute;
+    bottom: 0;
 }
 
 nav {
@@ -81,6 +97,9 @@ nav a:hover {
 }
 
 .servers {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
     width: 100%;
     list-style: none;
 }
@@ -102,4 +121,82 @@ nav a:hover {
 
 .display-none {
     display: none;
+}
+
+.title {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-left: 30%;
+}
+
+.home-img {
+    position: absolute;
+    z-index: -5;
+    bottom: 0;
+    left: 0;
+    width: 90%;
+
+}
+
+@media screen and (max-width: 1200px) {
+    .title, main {
+        margin-left: initial;
+    }
+  }
+
+form {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    gap:1rem;
+}
+
+::placeholder {
+    padding-left: 0.5rem;
+}
+
+input {
+    padding: 0.2rem;
+    border-radius: 5px;
+}
+
+.button-style {
+    font-size: 1rem;
+    padding: 0.5rem;
+    background-color: #84da9d;
+    cursor: pointer;
+    border: 2px solid black;
+    min-width: 200px;
+    width: fit-content;
+}
+
+.button-style:hover {
+    background-color: rgb(235, 181, 235);
+    color: white;
+    transition: 0.5s;
+}
+
+main img {
+    width: 30%;
+}
+
+.error-list {
+    padding: 1rem;
+}
+
+a:visited {
+    color: inherit;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+.list-style:hover {
+    
+    background-color: rgb(235, 181, 235);
+    color: white;
+    transition: 0.5s;
 }

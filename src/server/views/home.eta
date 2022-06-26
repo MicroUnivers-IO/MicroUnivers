@@ -11,13 +11,20 @@
 
 <body>
 
-    <main>
+    <div class="title">
         <h1>Bienvenue sur MicroUnivers !</h1>
+        <img src="static/images/logo.png" alt="logo">
+    </div>
+
+    <main>
         
+        <img src="static/images/miniVache.png" alt="Petite vache">
         <%~ includeFile('./partials/nav.eta', { userdata: it.userdata }) %>
 
 
     </main>
+    
+    <img src="static/images/accueil.png" alt="grosse vache" class="home-img">
 
     <%~ includeFile('./partials/footer.eta') %>
 

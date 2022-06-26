@@ -20,9 +20,10 @@
       <li>Vérifié : <%= it.userdata.verifyToken == null ? "vrai" : "faux" %></li>
     </ul>
 
-    <a href="/">Accueil</a>
+    <a href="/" class="button-style">Accueil</a>
   </main>
 
+  <img src="static/images/accueil.png" alt="grosse vache" class="home-img">
   
     <%~ includeFile('./partials/footer.eta') %>
 
