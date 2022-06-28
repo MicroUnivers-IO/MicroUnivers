@@ -1,6 +1,8 @@
 import { Container, AnimatedSprite, Text, Spritesheet, Sprite, Texture, Graphics } from 'pixi.js';
+import { MAP_PIXEL_HEIGHT, MAP_PIXEL_WIDTH } from '../../lib/common/const';
 import { Line, linesCollinding } from '../../lib/common/Line';
 import { getLimitLines } from '../../lib/common/MapComponent';
+import { QuadTree } from '../../lib/common/Quadtree';
 import { Rect } from '../../lib/common/Rect';
 import { addAngle, degreeToRad, getDirectionAngle, isBetweenAngle, radToDegree } from '../../lib/common/utils';
 import { Vector } from '../../lib/common/Vector';
@@ -112,16 +114,17 @@ export class GamePlayer extends Container {
         
         let directionAngle = getDirectionAngle(direction);
         
-        for(let gameEntity of GameApp.entitys){
-            let entityVec = new Vector(gameEntity.position.x, gameEntity.position.y);
-            let dist = playerVec.distance(entityVec);
-            
-            if(dist > GamePlayer.ATTACK_RANGE) continue;
-            
+        let entityQuadtree = new QuadTree(Number.MAX_SAFE_INTEGER, 100, new Rect(0,0, MAP_PIXEL_WIDTH, MAP_PIXEL_HEIGHT)).clear();
+        GameApp.entitys.forEach(e => entityQuadtree.addItem(e.position.x, e.position.y, e));
+        let monsters = entityQuadtree.getItemsInRadius(this.position.x, this.position.y, 100, 100);
+
+
+        for(let monster of monsters){
+            let entityVec = new Vector(monster.position.x, monster.position.y);            
             let entityAngle = playerVec.getAngle(entityVec);
 
             if(isBetweenAngle(entityAngle, directionAngle.angleA, directionAngle.angleB)){
-                gameEntity.entity.alive = false;
+                monster.entity.alive = false;
                 console.log("dead");
             }
         }
