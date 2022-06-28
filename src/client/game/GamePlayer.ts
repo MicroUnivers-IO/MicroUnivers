@@ -33,8 +33,8 @@ export class GamePlayer extends Container {
 
         this.currentSprite = new AnimatedSprite(texture);
         this.currentSprite.loop = false;
-        this.currentSprite.animationSpeed = 0.3;
-        this.currentSprite.scale.set(0.8, 0.8);
+        this.currentSprite.animationSpeed = 0.5;
+        this.currentSprite.scale.set(0.7, 0.7);
         this.currentSprite.play();
         
         
@@ -92,7 +92,7 @@ export class GamePlayer extends Container {
 
         let obstacles = GameApp.obstacleLineQuadTree.getItemsInRadius(this.position.x, this.position.y, 100, 10) as Line[];
         obstacles.push(...getLimitLines());
-        let hitbox = new Rect(this.position.x - 16, this.position.y - 16, 32, 32);
+        let hitbox = new Rect(this.position.x - 20, this.position.y - 20, 40, 40);
         velocity.handleCollision(obstacles, hitbox);
 
 
