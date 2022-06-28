@@ -33,8 +33,8 @@ export class GamePlayer extends Container {
 
         this.currentSprite = new AnimatedSprite(texture);
         this.currentSprite.loop = false;
-        this.currentSprite.animationSpeed = 0.5;
-        this.currentSprite.scale.set(2.2, 2.2);
+        this.currentSprite.animationSpeed = 0.3;
+        this.currentSprite.scale.set(0.8, 0.8);
         this.currentSprite.play();
         
         

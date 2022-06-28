@@ -42,10 +42,9 @@ export class GameApp {
             backgroundColor: 0x000000
         });
 
-        GameApp.app.loader.add("playerSpritesheet", "static/assets/player/sheet.json");
+        GameApp.app.loader.add("playerSpritesheet", "static/assets/player/vache.json");
         GameApp.app.loader.add("tileSet", "static/assets/tileset/vache.json");
         GameApp.app.loader.add("e", "static/assets/entity/entity.png");
-        GameApp.app.loader.add("test", "static/assets/player/vahed.json");
 
 
         GameApp.app.loader.load((loader, resources) => {
