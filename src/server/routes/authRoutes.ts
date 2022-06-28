@@ -1,10 +1,11 @@
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 import { matchPass } from "../../lib/crypt";
-import { createUser, existingMail, existingUsername, getUser, RegisterInfos } from "../models/User";
+import { createUser, existingMail, existingUsername, getUser, getUserByVerifyToken, RegisterInfos, UserData, verifyUser } from "../models/User";
 import Joi from "joi";
 
 // Config
 import { EMAIL_MAXL, EMAIL_MINL, PASSWORD_MAXL, PASSWORD_MINL, USERNAME_MAXL, USERNAME_MINL } from "../config/config";
+import { sendVerifMail } from "../modules/sendMail";
 
 async function authRoutes(server: FastifyInstance, options: any) {
 
@@ -19,6 +20,8 @@ async function authRoutes(server: FastifyInstance, options: any) {
     server.get('/register', { preHandler: unauthService }, getRegisterController);
 
     server.post('/register', { preHandler: unauthService }, postRegisterController);
+    
+    server.get('/verify', getVerifyController);
 
 }
 
@@ -28,16 +31,22 @@ export default authRoutes;
 
 // Redirect to auth page / account validation page if not logged
 export function authService(request: FastifyRequest, reply: FastifyReply, done: any): any {
-    if (!request.session.get('userData')) {
+    const userdata: UserData | undefined = request.session.get('userdata');
+    if (!userdata) {
         reply.redirect('auth');
     }
+
+    if(!(userdata?.verifyToken == null)) {
+        reply.view('authPages/validation.eta', { userdata });
+    }
+
     // If not verified..
     done();
 }
 
 // Redirect to profil if logged
 export function unauthService(request: FastifyRequest, reply: FastifyReply, done: any) {
-    if (request.session.get('userData')) {
+    if (request.session.get('userdata')) {
         reply.redirect('profil');
     }
     done();
@@ -47,7 +56,7 @@ export function unauthService(request: FastifyRequest, reply: FastifyReply, done
 /* --------------- Profil controllers --------------- */
 
 function getProfilController(request: FastifyRequest, reply: FastifyReply): any {
-    const userdata: object = request.session.get('userData');
+    const userdata: object = request.session.get('userdata');
     reply.view("authPages/profil.eta", { userdata: userdata });
 }
 /* --------------- Register controllers --------------- */
@@ -78,7 +87,9 @@ async function postRegisterController(request: FastifyRequest, reply: FastifyRep
     if(!verifyToken) {
         return reply.view("error.eta", { error: 'Un problème est survenu lors de l\'inscription.' });
     } else {
-        return reply.redirect("auth");
+        // pas d'await sur l'envoi du mail car cela peut durer plusieures secondes
+        sendVerifMail(registerInfos.username, registerInfos.email, verifyToken);
+        return reply.view('success.eta', { message: `Un email de validation de compte va être envoyé à l'adresse suivante (verifiez vos spams) : ${registerInfos.email}`});
     }
 }
 
@@ -95,21 +106,21 @@ async function postAuthController(request: FastifyRequest, reply: FastifyReply):
             return reply.view("authPages/auth.eta", { formError: validation.error.message });
         }
 
-        const userData = await getUser(data.username);
+        const userdata = await getUser(data.username);
 
         // L'utilisateur n'existe pas
-        if (!userData) {
+        if (!userdata) {
             return reply.view("authPages/auth.eta", { formError: "Combinaison utilisateur & mot de passe inexistant." });
         }
 
         // Le mot de passe n'est pas valide
-        if (!matchPass(userData.hashPass, data.password)) {
+        if (!matchPass(userdata.hashPass, data.password)) {
             return reply.view("authPages/auth.eta", { formError: "Combinaison utilisateur & mot de passe inexistant." });
         }
 
         // @ts-ignore
-        delete userData.hashPass;
-        request.session.set('userData', userData);
+        delete userdata.hashPass;
+        request.session.set('userdata', userdata);
         request.session.save()
 
         // Valider
@@ -124,6 +135,31 @@ async function postAuthController(request: FastifyRequest, reply: FastifyReply):
 function getAuthController(request: FastifyRequest, reply: FastifyReply): any {
     reply.view("authPages/auth.eta");
 }
+
+//getVerifiyController
+/* --------------- Verify controller --------------- */
+
+async function getVerifyController(request: FastifyRequest, reply: FastifyReply): Promise<any> {
+    // récupérer les infos de la requête si il y a 
+    // token: --> verify token
+    const queries: any = request.query;
+
+    // Verification qu'un token est bien envoyé
+    if(!queries.token) return reply.code(404).send('BAD REQUEST');
+
+    // Vérification que le token appartient bien à l'utilisateur en cours
+    const userdata: UserData | undefined = await getUserByVerifyToken(queries.token);
+    
+    // Pas d'utilisateur à vérifier
+    if(!userdata) {
+        return reply.send("Le lien a expiré.");
+    } else {
+        await verifyUser(userdata.userId);
+    }
+    userdata.verifyToken = null;
+    return reply.view('authPages/validation.eta', { userdata });
+}
+
 /* --------------- Disconnect controller --------------- */
 
 function anyDisconnectController(request: FastifyRequest, reply: FastifyReply): any {
@@ -155,6 +191,9 @@ const registerSchema = Joi.object({
                 'string.min': `Adresse email trop courte.`,
                 'string.max': `Adresse email trop longue.`
             }),
+    confirmEmail: Joi.any().valid(Joi.ref('email')).required().messages({
+            'any.only': 'Les deux emails doivent correspondrent.'
+    }),
     password: Joi.string().min(PASSWORD_MINL).max(PASSWORD_MAXL).required().messages(
         {
             'string.empty': 'Veuillez renseigner votre mot de passe.',
@@ -163,6 +202,6 @@ const registerSchema = Joi.object({
         }),
     confirmPassword: Joi.any().valid(Joi.ref('password')).required().messages(
         {
-            'any.only': 'Les deux mots de passe doivent correspondre.'
+            'any.only': 'Les deux mots de passe doivent correspondrent.'
         })
 });

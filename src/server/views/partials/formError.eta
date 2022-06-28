@@ -1,5 +1,5 @@
 <% if (it.formError) { %>
-<ul>
+<ul class="error-list">
     <% if( Array.isArray(it.formError)) { %>
 
         <% it.formError.forEach((err) => { %>

@@ -21,7 +21,7 @@ export default mainRoutes;
 
 
 function getHomeController(request: FastifyRequest, reply: FastifyReply): any {
-    const userdata = request.session.get('userData');
+    const userdata = request.session.get('userdata');
     reply.view('home.eta', { userdata: userdata });
 }
 
@@ -47,7 +47,7 @@ function postJoinservController(request: FastifyRequest, reply: FastifyReply): a
         console.log(lobbies[i]);
         if (lobbies[i].url == url) {
             console.log("oui !");
-            const userdata: UserData = request.session.get('userData');
+            const userdata: UserData = request.session.get('userdata');
             console.log("oui ! 2", userdata);
 
             cookie = encrypt(JSON.stringify({

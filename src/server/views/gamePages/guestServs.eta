@@ -19,7 +19,7 @@
         <ul class="servers">
 
             <% it.lobbies.forEach((lobby) => { %>
-                <li data-url=<%= lobby.url %> data-port=<%= lobby.port %> data-guestLobby=<%= lobby.guestLobby %> onclick="joinGame(event)">
+                <li class="list-style" data-url=<%= lobby.url %> data-port=<%= lobby.port %> data-guestLobby=<%= lobby.guestLobby %> onclick="joinGame(event)">
                     Nom: <%= lobby.name %> -- joueurs : <%= `${lobby.nbPlayers}/${lobby.maxPlayer}`%> <%= lobby.guestLobby = true ? "- Serveur Guest" : "" %>
                 </li>
             <% }) %>
@@ -28,6 +28,8 @@
 
 
     </main>
+
+    <img src="static/images/accueil.png" alt="grosse vache" class="home-img">
 
     <%~ includeFile('./partials/footer.eta') %>
 

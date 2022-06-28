@@ -1,5 +1,31 @@
-<% layout('./layouts/main') %>
+<!DOCTYPE html>
+<html lang="fr">
 
-<main>
-    WIP
-</main>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MicroUnivers - Vérfication</title>
+    <%~ includeFile('./partials/assets.eta') %>
+</head>
+
+<body>
+
+  <main>
+
+    <% if(it.userdata && it.userdata.verifyToken) { %>
+        <h3>Veuillez verifier votre compte !</h3>
+        <p>Un mail de valdiation à été envoyé à votre adresse : <%= it.userdata.email %></p>
+    <% } else { %>
+        <p>Votre compte est bien validé.</p>
+    <% } %>
+    <a href="/">Accueil</a>
+  </main>
+
+  <img src="static/images/accueil.png" alt="grosse vache" class="home-img">
+  
+    <%~ includeFile('./partials/footer.eta') %>
+
+</body>
+
+</html>

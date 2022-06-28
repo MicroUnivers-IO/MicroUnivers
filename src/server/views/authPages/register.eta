@@ -12,7 +12,7 @@
 <body>
 
     <main>
-        <h3>Inscription</h3>
+        <h1>Inscription</h1>
         <form action="" method="post">
 
             <p>
@@ -22,24 +22,29 @@
             <p>
                 <input name="email" type="email" placeholder="Email">
             </p>
+            <p>
+                <input name="confirmEmail" type="email" placeholder="Confirmation mail">
+            </p>
 
             <p>
                 <input name="password" type="password" placeholder="Mot de passe">
             </p>
             <p>
-                <input name="confirmPassword" type="password" placeholder="Confirmation">
+                <input name="confirmPassword" type="password" placeholder="Confirmation pass">
             </p>
 
 
             <%~ includeFile('./partials/formError.eta', { formError: it.formError }) %>
 
                 <p>
-                    <button>
+                    <button class="button-style">
                         S'inscrire
                     </button>
                 </p>
         </form>
     </main>
+
+    <img src="static/images/accueil.png" alt="grosse vache" class="home-img">
 
     <%~ includeFile('./partials/footer.eta') %>
 
