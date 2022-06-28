@@ -21,11 +21,11 @@ export interface MapComponent{
 }
 
 const isHighGround = (value: number) => {
-    return value > 0.2;
+    return value > 0.5;
 }
 
 const isLowGround = (value: number) => {
-    return value < -0.7;
+    return value < -0.5;
 }
 
 const isObstacle = (type: string) => {
@@ -81,8 +81,8 @@ export const createMap = () => {
 
     let mapNoise = makeRectangle(MAP_HEIGTH, MAP_WIDTH, makeNoise2D(), {
         octaves: 1,
-        amplitude: 1.5,
-        frequency: 0.04
+        amplitude: 1.1,
+        frequency: 0.02
     }) as unknown as number[][];
 
     for(let row = 0; row < MAP_HEIGTH; row++){
@@ -104,12 +104,11 @@ export const createMap = () => {
 }
 
 export const getLimitLines = () =>{
-    let limit = [];
-    limit.push(new Line(new Vector(0,0), new Vector(0, MAP_PIXEL_HEIGHT))) //right
-    limit.push(new Line(new Vector(MAP_PIXEL_WIDTH,0), new Vector(MAP_PIXEL_WIDTH, MAP_PIXEL_HEIGHT))) //left
-    limit.push(new Line(new Vector(MAP_PIXEL_WIDTH, MAP_PIXEL_HEIGHT), new Vector(0, 0))) // top
-    limit.push(new Line(new Vector(0,MAP_PIXEL_HEIGHT), new Vector(MAP_PIXEL_WIDTH, MAP_PIXEL_HEIGHT)))
-
-    return limit;
+    return [
+        new Line(new Vector(0,0), new Vector(0, MAP_PIXEL_HEIGHT)), // left
+        new Line(new Vector(MAP_PIXEL_WIDTH,0), new Vector(MAP_PIXEL_WIDTH, MAP_PIXEL_HEIGHT)), //right
+        new Line(new Vector(0, 0), new Vector(MAP_PIXEL_WIDTH, 0)), // up
+        new Line(new Vector(0,MAP_PIXEL_HEIGHT), new Vector(MAP_PIXEL_WIDTH, MAP_PIXEL_HEIGHT)) //down
+    ];
 }
 

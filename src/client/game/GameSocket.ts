@@ -57,6 +57,7 @@ export class GameSocket {
     static initGame(msg: any) {
         GameApp.setMap(msg.map);
         GameApp.setMainPlayer(msg.player as Player);
+        GameApp.initObstacleQuadtree(msg.obstacle);
     }
 
     static connError(msg: any) {

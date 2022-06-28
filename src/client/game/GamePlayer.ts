@@ -1,19 +1,25 @@
-import { Container, AnimatedSprite, Text, Spritesheet } from 'pixi.js';
+import { Container, AnimatedSprite, Text, Spritesheet, Sprite, Texture, Graphics } from 'pixi.js';
+import { Line, linesCollinding } from '../../lib/common/Line';
+import { getLimitLines } from '../../lib/common/MapComponent';
+import { Rect } from '../../lib/common/Rect';
+import { addAngle, degreeToRad, getDirectionAngle, isBetweenAngle, radToDegree } from '../../lib/common/utils';
+import { Vector } from '../../lib/common/Vector';
 import { Player } from '../../lib/types/Player';
+import { GameApp } from './GameApp';
 
 export class GamePlayer extends Container {
+
+    static readonly ATTACK_RADIUS = 20;
+    static readonly ATTACK_RANGE = 50;
 
     player: Player;
     playerSheet: Spritesheet;    
     currentSprite: AnimatedSprite;
     nameSprite: Text;
     
-    pastDirection: string;
-
     constructor(player: Player, spriteSheet: Spritesheet) {
         super();
         console.log(player);
-        this.pastDirection = "down";
         this.player = player;
         this.playerSheet = spriteSheet;
 
@@ -42,14 +48,15 @@ export class GamePlayer extends Container {
     }
 
     updateMain(up: boolean, down: boolean, left: boolean, right: boolean, attack: boolean, direction: string){
-        let horizontal = 0, vertical = 0;
+        let velocity = new Vector();
 
         if(attack){
             this.currentSprite.stop();
             this.currentSprite.textures = this.playerSheet.animations[`attack_${direction}`];
             this.player.action = `attack_${direction}`;
             this.currentSprite.play();
-            
+            this.handleAttack(direction);
+
             return;
         }
 
@@ -62,10 +69,10 @@ export class GamePlayer extends Container {
             return;
         }
         
-        if(left)  horizontal -= 3;
-        if(right) horizontal += 3;
-        if(up)    vertical   += 3;
-        if(down)  vertical   -= 3;
+        if(left)  velocity.x -= 3;
+        if(right) velocity.x += 3;
+        if(up)    velocity.y += 3;
+        if(down)  velocity.y -= 3;
         
 
         if(!this.currentSprite.playing){
@@ -74,15 +81,21 @@ export class GamePlayer extends Container {
             this.player.action = `walk_${direction}`;
         }
 
-        let magnitude =  Math.sqrt(horizontal**2 + vertical**2);
+        let magnitude =  Math.sqrt(velocity.x**2 + velocity.y**2);
 
         if(magnitude != 0){
-            horizontal = Math.round(((horizontal / magnitude) * 100)) / 100 * this.player.speed;
-            vertical = Math.round(((vertical / magnitude) * 100)) / 100 * this.player.speed;
+            velocity.x = Math.round(((velocity.x / magnitude) * 100)) / 100 * this.player.speed;
+            velocity.y = Math.round(((velocity.y / magnitude) * 100)) / 100 * this.player.speed;
         }
 
-        this.player.x += horizontal;
-        this.player.y -= vertical;
+        let obstacles = GameApp.obstacleLineQuadTree.getItemsInRadius(this.position.x, this.position.y, 100, 10) as Line[];
+        obstacles.push(...getLimitLines());
+        let hitbox = new Rect(this.position.x - 16, this.position.y - 16, 32, 32);
+        velocity.handleCollision(obstacles, hitbox);
+
+
+        this.player.x += velocity.x;
+        this.player.y -= velocity.y;
 
         this.position.set(this.player.x, this.player.y);
     }
@@ -93,6 +106,26 @@ export class GamePlayer extends Container {
         this.x = x;
         this.y = y;
     }*/
+
+    handleAttack(direction: string){
+        let playerVec = new Vector(this.position.x, this.position.y);
+        
+        let directionAngle = getDirectionAngle(direction);
+        
+        for(let gameEntity of GameApp.entitys){
+            let entityVec = new Vector(gameEntity.position.x, gameEntity.position.y);
+            let dist = playerVec.distance(entityVec);
+            
+            if(dist > GamePlayer.ATTACK_RANGE) continue;
+            
+            let entityAngle = playerVec.getAngle(entityVec);
+
+            if(isBetweenAngle(entityAngle, directionAngle.angleA, directionAngle.angleB)){
+                gameEntity.entity.alive = false;
+                console.log("dead");
+            }
+        }
+    }
 
     updateOther(x: number, y:number, action:string) {
         this.player.x = x;

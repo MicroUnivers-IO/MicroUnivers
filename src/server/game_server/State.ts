@@ -1,7 +1,7 @@
 import uWS from "uWebSockets.js";
 import { Player } from "../../lib/types/Player";
 import { ServEntity } from "./ServEntity";
-import { createMap, MapComponent} from "../../lib/common/MapComponent";
+import { createMap, getLimitLines, MapComponent} from "../../lib/common/MapComponent";
 import { MAP_PIXEL_HEIGHT, MAP_PIXEL_WIDTH} from "../../lib/common/const";
 import { QuadTree } from "../../lib/common/Quadtree";
 import { Rect } from "../../lib/common/Rect";
@@ -40,7 +40,7 @@ export class State {
         this.obstacleLines.forEach(ol => this.obstacleLinesQuadTree.addItem(ol.x, ol.y, ol));        
 
         this.entitys = [];
-        for(let i = 0; i < 20; i++){
+        for(let i = 0; i < 5; i++){
             let coord = this._randomCoordWithinSpawningArea()
             this.entitys.push(new ServEntity(coord.x, coord.y));
         }

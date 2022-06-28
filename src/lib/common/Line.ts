@@ -26,7 +26,6 @@ export class Line{
         return Math.abs(this.p1.y - this.p2.y)
     }
 
-
 }   
 
 export const getObstacleLines = (tileMatrix: MapComponent[][]) => {
@@ -58,30 +57,30 @@ export const getObstacleLines = (tileMatrix: MapComponent[][]) => {
     return obstacleLines;
 }
 
-const lineColliding = (v1: Vector, v2: Vector, v3: Vector, v4: Vector) => {
+const lineColliding = (line1: Line, line2: Line) => {
     // http://paulbourke.net/geometry/pointlineplane/javascript.txt
-    if((v1.x === v2.x && v1.y === v2.y) || (v3.x === v4.x && v3.y === v4.y)) return false;
+    if((line1.p1.x === line1.p2.x && line1.p1.y === line1.p2.y) || (line2.p1.x === line2.p2.x && line2.p1.y === line2.p2.y)) return false;
      
 
-    let denominator = ((v4.y - v3.y) * (v2.x - v1.x) - (v4.x - v3.x) * (v2.y - v1.y))
+    let denominator = ((line2.p2.y - line2.p1.y) * (line1.p2.x - line1.p1.x) - (line2.p2.x - line2.p1.x) * (line1.p2.y - line1.p1.y))
 
     if(denominator === 0) return false;
     
 
-    let ua = ((v4.x - v3.x) * (v1.y - v3.y) - (v4.y - v3.y) * (v1.x - v3.x)) / denominator;
-    let ub = ((v2.x - v1.x) * (v1.y - v3.y) - (v2.y - v1.y) * (v1.x - v3.x)) / denominator;
+    let ua = ((line2.p2.x - line2.p1.x) * (line1.p1.y - line2.p1.y) - (line2.p2.y - line2.p1.y) * (line1.p1.x - line2.p1.x)) / denominator;
+    let ub = ((line1.p2.x - line1.p1.x) * (line1.p1.y - line2.p1.y) - (line1.p2.y - line1.p1.y) * (line1.p1.x - line2.p1.x)) / denominator;
 
     if(ua <= 0 || ua >= 1 || ub <= 0 || ub >= 1) return false;
     
-    let x = v1.x + ua * (v2.x - v1.x);
-    let y = v1.y + ua * (v2.y - v1.y);
+    let x = line1.p1.x + ua * (line1.p2.x - line1.p1.x);
+    let y = line1.p1.y + ua * (line1.p2.y - line1.p1.y);
 
     return new Vector(x, y);
 }
 
-export const linesCollinding = (v1: Vector, v2: Vector, lines: Line[]) => {
-    for(let line of lines){
-        let intersection = lineColliding(v1, v2, line.p1, line.p2);
+export const linesCollinding = (line: Line, lines: Line[]) => {
+    for(let l of lines){
+        let intersection = lineColliding(line, l);
         
         if(intersection) return intersection;   
     } 

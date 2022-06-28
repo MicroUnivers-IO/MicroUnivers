@@ -62,6 +62,7 @@ async function onHandshake(ws: uWS.WebSocket, msg: any, state: State) {
         type: PROTOCOLS.INIT_PLAYER,
         player: p,
         map: state.tileMatrix,
+        obstacle: state.obstacleLines
     }
 
     ws.send(JSON.stringify(initMSG));

@@ -6,6 +6,7 @@ import { QuadTree } from "../../lib/common/Quadtree";
 import { MAP_PIXEL_HEIGHT, MAP_PIXEL_WIDTH } from "../../lib/common/const";
 import { addAngle, degreeToRad } from "../../lib/common/utils";
 import { Line, linesCollinding } from "../../lib/common/Line";
+import { Rect } from "../../lib/common/Rect";
 
 
 export class ServEntity implements Entity{
@@ -25,19 +26,18 @@ export class ServEntity implements Entity{
     static maxForce = 1;
 
     id: number;
+    alive: boolean;
+
     x: number;
     y: number;
-    width: number;
-    height: number;
+
     position: Vector;
     velocity: Vector;
     acceleration: Vector;
 
     constructor(x: number, y: number){
         this.id = ServEntity.count++
-        
-        this.width = 32;
-        this.height = 32;
+        this.alive = true;
 
         this.x = x;
         this.y = y;
@@ -46,6 +46,7 @@ export class ServEntity implements Entity{
 
         this.acceleration = new Vector();
     } 
+    
 
     edges() {
         if (this.position.x > MAP_PIXEL_WIDTH) {
@@ -174,7 +175,7 @@ export class ServEntity implements Entity{
         let start = addAngle(baseAngle, -(degreeToRad(ServEntity.RADIUS_OF_VIEW) / 2));
 
         let baseVec = this.position.circlePoint(baseAngle, ServEntity.RADIUS_OBSTACLE);
-        let firstIntersection = linesCollinding(this.position, baseVec, obstacles);
+        let firstIntersection = linesCollinding(new Line(this.position, baseVec), obstacles);
         if(!firstIntersection) return null;
 
         let separation = 2;
@@ -191,7 +192,7 @@ export class ServEntity implements Entity{
         });
         
         for(let i = 0; i < directions.length; i++){
-            let intersection = linesCollinding(this.position, directions[i], obstacles)
+            let intersection = linesCollinding(new Line(this.position, directions[i]), obstacles) 
             if(intersection) directions[i] = intersection;            
         }
 
@@ -209,7 +210,7 @@ export class ServEntity implements Entity{
         let target = this.targetNearestPlayer(players);        
         
         separation.mult(2);
-        target.mult(20);
+        target.mult(25);
 
         this.acceleration
         .add(alignment)
@@ -223,7 +224,7 @@ export class ServEntity implements Entity{
         this.flock(entitysQuadTree, players);
         this.velocity.add(this.acceleration);
         this.velocity.limit(ServEntity.maxSpeed);
-        this.collisionAvoidance(obstaclesQuadtree)
+        this.collisionAvoidance(obstaclesQuadtree);
         this.position.add(this.velocity);
         this.acceleration.mult(0); //reset
         this.x = this.position.x;

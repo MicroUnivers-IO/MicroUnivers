@@ -1,4 +1,6 @@
 import { runInThisContext } from "vm";
+import { Line, linesCollinding } from "./Line";
+import { Rect } from "./Rect";
 
 export class Vector{
 
@@ -99,5 +101,37 @@ export class Vector{
 
     copy(){
         return new Vector(this.x, this.y);
+    }
+
+    isInTriangle(a: Vector, b: Vector, c: Vector){
+        //https://stackoverflow.com/a/20861130
+        //pas d'explication dsl
+        
+        let as_x = this.x - a.x;
+        let as_y = this.y - a.y;
+
+        let s_ab = (b.x-a.x)*as_y-(b.y-a.y)*as_x > 0;
+
+        if((c.x-a.x)*as_y-(c.y-a.y)*as_x > 0 == s_ab) return false;
+    
+        if((c.x-b.x)*(this.y-b.y)-(c.y-b.y)*(this.x-b.x) > 0 != s_ab) return false;
+    
+        return true;
+    }
+
+    handleCollision(obstacles: Line[], hitbox: Rect){
+        let up = new Line(new Vector(hitbox.x + this.x, hitbox.y), new Vector(hitbox.x + hitbox.width + this.x, hitbox.y));
+        let down = new Line(new Vector(hitbox.x + this.x, hitbox.y + hitbox.height), new Vector(hitbox.x + hitbox.width + this.x, hitbox.y + hitbox.height));
+
+        let left = new Line(new Vector(hitbox.x, hitbox.y - this.y), new Vector(hitbox.x, hitbox.y + hitbox.height - this.y));
+        let right = new Line(new Vector(hitbox.x + hitbox.width, hitbox.y - this.y), new Vector(hitbox.x + hitbox.width, hitbox.y + hitbox.height - this.y));
+
+        if(linesCollinding(up, obstacles) || linesCollinding(down, obstacles))
+            this.x = 0; 
+
+        if(linesCollinding(left, obstacles) || linesCollinding(right, obstacles))
+            this.y = 0;
+
+        return this;
     }
 }

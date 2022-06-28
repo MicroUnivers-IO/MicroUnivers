@@ -1,4 +1,4 @@
-import { Application, Sprite, Spritesheet, Texture } from "pixi.js";
+import { Application, Graphics, Sprite, Spritesheet, Texture } from "pixi.js";
 import { Entity } from "../../lib/types/Entity";
 import { MapComponent } from "../../lib/common/MapComponent";
 import { Player } from "../../lib/types/Player";
@@ -8,6 +8,10 @@ import { GamePlayer } from "./GamePlayer";
 import { GameSocket } from "./GameSocket";
 import { GameState } from "./GameState";
 import { Vector } from "../../lib/common/Vector";
+import { QuadTree } from "../../lib/common/Quadtree";
+import { MAP_PIXEL_WIDTH, MAP_PIXEL_HEIGHT } from "../../lib/common/const";
+import { Rect } from "../../lib/common/Rect";
+import { Line } from "../../lib/common/Line";
 
 export class GameApp {
     static app: Application;
@@ -16,6 +20,8 @@ export class GameApp {
     static collisionMatrix: number[][];
     static players: GamePlayer[] = [];
     static entitys: GameEntity[] = [];
+    static obstacleLineQuadTree: QuadTree;
+
     static mainPlayer: GamePlayer;
     static state: GameState;
 
@@ -37,7 +43,7 @@ export class GameApp {
         });
 
         GameApp.app.loader.add("playerSpritesheet", "static/assets/player/sheet.json");
-        GameApp.app.loader.add("tileSet", "static/assets/tileset/texture.json");
+        GameApp.app.loader.add("tileSet", "static/assets/tileset/vache.json");
         GameApp.app.loader.add("e", "static/assets/entity/entity.png");
         GameApp.app.loader.add("test", "static/assets/player/vahed.json");
 
@@ -61,6 +67,11 @@ export class GameApp {
     static setMap(tileMatrix: MapComponent[][]) {
         GameApp.map = new GameMap(GameApp.app.loader.resources["tileSet"].spritesheet as Spritesheet, tileMatrix);
         GameApp.app.stage.addChild(GameApp.map);
+    }
+
+    static initObstacleQuadtree(lines: Line[]){
+        GameApp.obstacleLineQuadTree = new QuadTree(Number.MAX_SAFE_INTEGER, 100, new Rect(0,0, MAP_PIXEL_WIDTH, MAP_PIXEL_HEIGHT)).clear();
+        lines.forEach(l => GameApp.obstacleLineQuadTree.addItem(l.x, l.y, l));    
     }
 
     static resizeHandler(): void {
@@ -144,22 +155,6 @@ export class GameApp {
         GameSocket.sendUpdate(GameApp.mainPlayer.player);
     }
 
-    static isPointInTriangle(s: Vector, a: Vector, b: Vector, c: Vector){
-        //https://stackoverflow.com/a/20861130
-        //pas d'explication dsl
-        
-        let as_x = s.x - a.x;
-        let as_y = s.y - a.y;
-
-        let s_ab = (b.x-a.x)*as_y-(b.y-a.y)*as_x > 0;
-
-        if((c.x-a.x)*as_y-(c.y-a.y)*as_x > 0 == s_ab) return false;
-    
-        if((c.x-b.x)*(s.y-b.y)-(c.y-b.y)*(s.x-b.x) > 0 != s_ab) return false;
-    
-        return true;
-    }
-
     static updateDirectionFromMouse(e: any){
         if(!GameApp.mainPlayer) return;
         
@@ -171,9 +166,9 @@ export class GameApp {
         let bottomRight = new Vector(window.innerWidth, window.innerHeight);
         let mid = new Vector(window.innerWidth / 2, window.innerHeight / 2);
 
-        if(GameApp.isPointInTriangle(mousePos, topLeft, bottomLeft, mid)) GameApp.direction = "left";
-        if(GameApp.isPointInTriangle(mousePos, topLeft, topRight, mid)) GameApp.direction = "up";
-        if(GameApp.isPointInTriangle(mousePos, topRight, bottomRight, mid)) GameApp.direction = "right";
-        if(GameApp.isPointInTriangle(mousePos, bottomRight, bottomLeft, mid)) GameApp.direction = "down";
+        if(mousePos.isInTriangle(topLeft, bottomLeft, mid)) GameApp.direction = "left";
+        if(mousePos.isInTriangle(topLeft, topRight, mid)) GameApp.direction = "up";
+        if(mousePos.isInTriangle(topRight, bottomRight, mid)) GameApp.direction = "right";
+        if(mousePos.isInTriangle(bottomRight, bottomLeft, mid)) GameApp.direction = "down";
     }
 }
