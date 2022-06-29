@@ -43,8 +43,8 @@ export class GameApp {
         });
 
         GameApp.app.loader.add("playerSpritesheet", "static/assets/player/vache.json");
-        GameApp.app.loader.add("tileSet", "static/assets/tileset/vache.json");
-        GameApp.app.loader.add("e", "static/assets/entity/entity.png");
+        GameApp.app.loader.add("tileSet", "static/assets/tileset/tileset.json");
+        GameApp.app.loader.add("entitySpritesheet", "static/assets/entity/slime.json");
 
 
         GameApp.app.loader.load((loader, resources) => {
@@ -98,14 +98,14 @@ export class GameApp {
         if (GameApp.mainPlayer && GameApp.map) GameApp.render();
     }
 
-    static addPlayer(p: Player, sp: Spritesheet) {
+    static addPlayer(p: Player) {
         const np = new GamePlayer(p, GameApp.app.loader.resources["playerSpritesheet"].spritesheet as Spritesheet)
         GameApp.players.push(np);
         GameApp.map.addChild(np);
     }
 
     static addEntity(e: Entity){
-        let ne = new GameEntity(e, new Sprite(GameApp.app.loader.resources["e"].texture as Texture));
+        const ne = new GameEntity(e, GameApp.app.loader.resources["entitySpritesheet"].spritesheet as Spritesheet);
         GameApp.entitys.push(ne);
         GameApp.map.addChild(ne);
     }
@@ -128,7 +128,7 @@ export class GameApp {
                 }
             }
             if (newP) {
-                GameApp.addPlayer(state.players[i] as Player, GameApp.app.loader.resources["playerSpritesheet"].spritesheet as Spritesheet)
+                GameApp.addPlayer(state.players[i] as Player)
             }
             
         }

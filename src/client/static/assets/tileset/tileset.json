@@ -2308,7 +2308,7 @@
   "meta": {
     "app": "http://free-tex-packer.com",
     "version": "0.6.7",
-    "image": "vache.png",
+    "image": "tileset.png",
     "format": "RGBA8888",
     "size": {
       "w": 768,

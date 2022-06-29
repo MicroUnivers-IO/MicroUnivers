@@ -6,7 +6,6 @@ import { QuadTree } from "../../lib/common/Quadtree";
 import { MAP_PIXEL_HEIGHT, MAP_PIXEL_WIDTH } from "../../lib/common/const";
 import { addAngle, degreeToRad } from "../../lib/common/utils";
 import { Line, linesCollinding } from "../../lib/common/Line";
-import { Rect } from "../../lib/common/Rect";
 
 
 export class ServEntity implements Entity{
@@ -22,7 +21,7 @@ export class ServEntity implements Entity{
     static MAX_ITEMS = 20;
 
     static count: number = 0;
-    static maxSpeed = 10;
+    static maxSpeed = 7;
     static maxForce = 1;
 
     id: number;

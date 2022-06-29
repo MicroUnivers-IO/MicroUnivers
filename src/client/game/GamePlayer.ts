@@ -11,8 +11,7 @@ import { GameApp } from './GameApp';
 
 export class GamePlayer extends Container {
 
-    static readonly ATTACK_RADIUS = 20;
-    static readonly ATTACK_RANGE = 50;
+    static readonly ATTACK_RADIUS = 50;
 
     player: Player;
     playerSheet: Spritesheet;    
@@ -21,7 +20,6 @@ export class GamePlayer extends Container {
     
     constructor(player: Player, spriteSheet: Spritesheet) {
         super();
-        console.log(player);
         this.player = player;
         this.playerSheet = spriteSheet;
 
@@ -33,7 +31,7 @@ export class GamePlayer extends Container {
 
         this.currentSprite = new AnimatedSprite(texture);
         this.currentSprite.loop = false;
-        this.currentSprite.animationSpeed = 0.5;
+        this.currentSprite.animationSpeed = 0.2;
         this.currentSprite.scale.set(0.7, 0.7);
         this.currentSprite.play();
         
@@ -92,7 +90,7 @@ export class GamePlayer extends Container {
 
         let obstacles = GameApp.obstacleLineQuadTree.getItemsInRadius(this.position.x, this.position.y, 100, 10) as Line[];
         obstacles.push(...getLimitLines());
-        let hitbox = new Rect(this.position.x - 20, this.position.y - 20, 40, 40);
+        let hitbox = new Rect(this.player.x - 20, this.player.y - 20, 40, 40);
         velocity.handleCollision(obstacles, hitbox);
 
 
@@ -116,7 +114,7 @@ export class GamePlayer extends Container {
         
         let entityQuadtree = new QuadTree(Number.MAX_SAFE_INTEGER, 100, new Rect(0,0, MAP_PIXEL_WIDTH, MAP_PIXEL_HEIGHT)).clear();
         GameApp.entitys.forEach(e => entityQuadtree.addItem(e.position.x, e.position.y, e));
-        let monsters = entityQuadtree.getItemsInRadius(this.position.x, this.position.y, 100, 100);
+        let monsters = entityQuadtree.getItemsInRadius(this.position.x, this.position.y, GamePlayer.ATTACK_RADIUS, 3);
 
 
         for(let monster of monsters){

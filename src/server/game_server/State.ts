@@ -40,7 +40,7 @@ export class State {
         this.obstacleLines.forEach(ol => this.obstacleLinesQuadTree.addItem(ol.x, ol.y, ol));        
 
         this.entitys = [];
-        for(let i = 0; i < 5; i++){
+        for(let i = 0; i < 200; i++){
             let coord = this._randomCoordWithinSpawningArea()
             this.entitys.push(new ServEntity(coord.x, coord.y));
         }
