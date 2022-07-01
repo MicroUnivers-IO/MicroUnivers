@@ -11,7 +11,7 @@ import { GameApp } from './GameApp';
 
 export class GamePlayer extends Container {
 
-    static readonly ATTACK_RADIUS = 50;
+    static readonly ATTACK_RADIUS = 100;
 
     player: Player;
     playerSheet: Spritesheet;    
@@ -31,7 +31,7 @@ export class GamePlayer extends Container {
 
         this.currentSprite = new AnimatedSprite(texture);
         this.currentSprite.loop = false;
-        this.currentSprite.animationSpeed = 0.2;
+        this.currentSprite.animationSpeed = 0.5;
         this.currentSprite.scale.set(0.7, 0.7);
         this.currentSprite.play();
         

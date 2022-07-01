@@ -1,4 +1,5 @@
 import { PROTOCOLS } from "../../lib/enums/protocols";
+import { Entity } from "../../lib/types/Entity";
 import { Player } from "../../lib/types/Player";
 import { GameApp } from "./GameApp";
 import { GameState } from "./GameState";
@@ -65,10 +66,11 @@ export class GameSocket {
         alert(msg.error);
     }
 
-    static sendUpdate(player: Player) {
+    static sendUpdate(player: Player, deadEntities: Entity[]) {
         let updateMSG = {
             type: PROTOCOLS.CLI_UPDATE,
-            player: player
+            player: player,
+            deadEntities: deadEntities
         }
         this.ws.send(JSON.stringify(updateMSG));
     }

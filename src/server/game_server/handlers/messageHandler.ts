@@ -75,6 +75,7 @@ function onUpdate(ws: uWS.WebSocket, msg: any, state: State) {
 
     let updatedPlayer: Player = msg.player;
     state.updatePlayer(ws, updatedPlayer);
+    state.removeDeadEntities(msg.deadEntities);
 }
 
 

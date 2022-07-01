@@ -21,11 +21,11 @@ export interface MapComponent{
 }
 
 const isHighGround = (value: number) => {
-    return value > 0.5;
+    return value > 0.6;
 }
 
 const isLowGround = (value: number) => {
-    return value < -0.5;
+    return value < -0.6;
 }
 
 const isObstacle = (type: string) => {
@@ -81,8 +81,8 @@ export const createMap = () => {
 
     let mapNoise = makeRectangle(MAP_HEIGTH, MAP_WIDTH, makeNoise2D(), {
         octaves: 1,
-        amplitude: 1.1,
-        frequency: 0.02
+        amplitude: 1.2,
+        frequency: 0.04
     }) as unknown as number[][];
 
     for(let row = 0; row < MAP_HEIGTH; row++){

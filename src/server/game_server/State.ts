@@ -8,6 +8,7 @@ import { Rect } from "../../lib/common/Rect";
 import { getObstacleLines, Line } from "../../lib/common/Line";
 import { Vector } from "../../lib/common/Vector";
 import { LobbyOpts } from "./Lobby";
+import { Entity } from "../../lib/types/Entity";
 
 
 export class State {
@@ -19,7 +20,7 @@ export class State {
     tileMatrix: MapComponent[][];
     spawnableArea: MapComponent[];
     obstacleLines: Line[];
-    entitys: ServEntity[];
+    entities: ServEntity[];
     entitysQuadTree: QuadTree;
     obstacleLinesQuadTree: QuadTree;
 
@@ -39,10 +40,10 @@ export class State {
         this.obstacleLines = getObstacleLines(this.tileMatrix);
         this.obstacleLines.forEach(ol => this.obstacleLinesQuadTree.addItem(ol.x, ol.y, ol));        
 
-        this.entitys = [];
-        for(let i = 0; i < 200; i++){
+        this.entities = [];
+        for(let i = 0; i < 14; i++){
             let coord = this._randomCoordWithinSpawningArea()
-            this.entitys.push(new ServEntity(coord.x, coord.y));
+            this.entities.push(new ServEntity(coord.x, coord.y));
         }
     }
 
@@ -79,8 +80,8 @@ export class State {
         let players = this.getPlayers();
         this.entitysQuadTree.clear();
         
-        this.entitys.forEach(entity => this.entitysQuadTree.addItem(entity.position.x, entity.position.y, entity)); //updating the quadtree
-        this.entitys.forEach(entity => entity.update(this.entitysQuadTree, players, this.obstacleLinesQuadTree));
+        this.entities.forEach(entity => this.entitysQuadTree.addItem(entity.position.x, entity.position.y, entity)); //updating the quadtree
+        this.entities.forEach(entity => entity.update(this.entitysQuadTree, players, this.obstacleLinesQuadTree));
     }
 
     deletePlayer(ws: uWS.WebSocket) {
@@ -93,5 +94,21 @@ export class State {
             p.push(this.players[key]);
 
         return p;
+    }
+
+    removeDeadEntities(deadEntities: Entity[]){
+        this.entities = this.entities.filter(e => {
+            for(let de of deadEntities){
+                if(e.id === de.id) return false;
+            }
+            return true;
+        });
+
+        if(this.entities.length < 10){
+            for(let i = 0; i < 30; i++){
+                let coord = this._randomCoordWithinSpawningArea()
+                this.entities.push(new ServEntity(coord.x, coord.y));
+            }
+        }
     }
 }

@@ -1399,15 +1399,15 @@
       "attack_right": ["r_attack0.png", "r_attack1.png", "r_attack2.png"],
       "attack_up": ["b_attack0.png", "b_attack1.png", "b_attack2.png"],
       
-      "idle_down": ["standing1.png", "standing2.png"],
-      "idle_left": ["standing1.png", "standing2.png"],
-      "idle_right": ["standing1.png", "standing2.png"],
-      "idle_up": ["standing1.png", "standing2.png"],
+      "idle_down": ["standing1.png"],
+      "idle_left": ["left0.png"],
+      "idle_right": ["right0.png"],
+      "idle_up": ["backward0.png"],
       
-      "walk_up": ["backward0.png", "backward1.png", "backward2.png", "backward3.png", "backward4.png", "backward5.png", "backward6.png", "backward7.png", "backward8.png", "backward9.png", "backward10.png", "backward11.png", "backward12.png"],
-      "walk_left": ["left0.png", "left1.png", "left2.png", "left3.png", "left4.png", "left5.png", "left6.png", "left7.png", "left8.png"],
-      "walk_right": ["right0.png", "right1.png", "right2.png", "right3.png", "right4.png", "right5.png", "right6.png", "right7.png", "right8.png"],
-      "walk_down": ["forward0.png", "forward1.png", "forward2.png", "forward3.png", "forward4.png", "forward5.png", "forward6.png", "forward7.png", "forward8.png", "forward9.png", "forward10.png", "forward11.png", "forward12.png"]
+      "walk_up": ["backward0.png", "backward1.png", "backward2.png", "backward3.png", "backward10.png", "backward11.png"],
+      "walk_left": ["left0.png", "left1.png", "left2.png", "left3.png", "left4.png", "left5.png", "left6.png"],
+      "walk_right": ["right0.png", "right1.png", "right2.png", "right3.png", "right4.png", "right5.png", "right6.png"],
+      "walk_down": ["forward0.png", "forward1.png", "forward2.png", "forward3.png", "forward10.png", "forward11.png"]
   },
   "meta": {
     "app": "http://free-tex-packer.com",

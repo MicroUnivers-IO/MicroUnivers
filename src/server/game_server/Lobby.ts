@@ -72,7 +72,7 @@ export class Lobby {
             this.app.publish(this.PROTOCOLS_ENUM.UPDATE, JSON.stringify({
                 type: this.PROTOCOLS_ENUM.UPDATE,
                 players: this.state.getPlayers(),
-                entitys: this.state.entitys,
+                entitys: this.state.entities,
                 t: Date.now(),
             }));
         }).start();
